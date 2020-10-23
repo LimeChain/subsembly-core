@@ -1,0 +1,34 @@
+{
+  "name": "as-substrate",
+  "version": "1.0.0",
+  "description": "AssemblyScript PoC Account-Based Runtime for Substrate Nodes",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "packages/modules/*",
+    "tools/*",
+    "src"
+  ],
+  "scripts": {
+    "clean": "yarn workspaces run clean && rm -rf node_modules",
+    "build": "cd ./src && yarn run build",
+    "test": "cd ./src && yarn run test",
+    "test:ci": "cd ./src && yarn run test:ci",
+    "build-spec": "yarn --cwd=./tools/spec-builder run asbuild:optimized && node ./node_modules/@as-substrate/spec-builder"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LimeChain/as-substrate-runtime.git"
+  },
+  "keywords": [
+    "substrate",
+    "wasm",
+    "assemblyscript"
+  ],
+  "author": "Daniel Ivanov <daniel-k-ivanov>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/LimeChain/as-substrate-runtime/issues"
+  },
+  "homepage": "https://github.com/LimeChain/as-substrate-runtime#readme"
+}

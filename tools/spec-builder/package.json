@@ -1,0 +1,29 @@
+{
+  "name": "@as-substrate/spec-builder",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha",
+    "asbuild:optimized": "asc assembly/index.ts -b build/build-spec.wasm -t build/build-spec.wat --runtime full --optimize",
+    "asbuild": "npm run asbuild:optimized",
+    "build-spec": "npm run asbuild:optimized && node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@as-substrate/balances-module": "1.0.0",
+    "@as-substrate/core-utils": "1.0.0",
+    "@as-substrate/aura-module": "1.0.0",
+    "@assemblyscript/loader": "^0.14.3",
+    "@polkadot/api": "^1.26.1",
+    "@polkadot/types": "^1.26.1",
+    "@polkadot/util": "^3.0.1",
+    "as-scale-codec": "^0.1.1",
+    "yargs": "^15.4.1"
+  },
+  "devDependencies": {
+    "mocha": "^8.0.1",
+    "assemblyscript": "^0.14.3"
+  }
+}
