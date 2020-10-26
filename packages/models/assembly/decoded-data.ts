@@ -1,20 +1,19 @@
-import { IDecodedData } from "./interfaces/idecoded-data";
-import { Codec } from 'as-scale-codec';
+
 /**
  * Class used to return the result of decoding an object, together with a sliced array of bytes that are left for decoding
  */
-export class DecodedData<Codec> implements IDecodedData<Codec>{
+export class DecodedData<T> {
 
     /**
      * The result of the decoding of an object
      */
-    public result: Codec;
+    public result: T;
     /**
      * The array of bytes left to be decoded
      */
     public input: u8[];
 
-    getResult(): Codec{
+    getResult(): T {
         return this.result;
     }
 
@@ -22,7 +21,7 @@ export class DecodedData<Codec> implements IDecodedData<Codec>{
         return this.input;
     }
 
-    constructor(result: Codec, input: u8[]) {
+    constructor(result: T, input: u8[]) {
         this.result = result;
         this.input = input;
     }

@@ -1,8 +1,8 @@
 import { Hash, CompactInt, Bytes, BytesReader } from "as-scale-codec";
 import { Utils } from "@as-substrate/core-utils";
-import { Option, DecodedData, DigestItem } from "./";
+import { Option, DecodedData, DigestItem } from ".";
 import { Constants } from "./constants";
-import { IHeader } from "./interfaces/iheader";
+import { IHeader } from "./interfaces/i-header";
 
 /**
  * Class representing a Block Header into the Substrate Runtime
@@ -64,6 +64,9 @@ export class Header implements IHeader{
     getStateRoot(): Hash{
         return this.stateRoot;
     }
+    getDigests(): DigestItem[]{
+        return <DigestItem[]>this.digests.unwrap();
+    }
     /**
      * Encoded length of the header
      */
@@ -102,7 +105,7 @@ export class Header implements IHeader{
      * @param input - SCALE encoded Header
      * TODO - avoid slicing the aray for better performance
      */
-    static fromU8Array(input: u8[]): DecodedData<Header> {
+    static fromU8Array(input: u8[]): DecodedData<IHeader> {
         const bytesReader = new BytesReader(input);
 
         const parentHash = bytesReader.readHash();

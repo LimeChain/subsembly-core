@@ -1,10 +1,9 @@
-import { Codec } from "as-scale-codec";
-import { ISignature } from "./interfaces/isignature";
+import { ISignature } from "./interfaces/i-signature";
 
 /**
  * Class representing a Signature in the Substrate Runtime
  */
-export class Signature implements ISignature {
+export class Signature {
 
     /**
      * Length of the bytes of a signature

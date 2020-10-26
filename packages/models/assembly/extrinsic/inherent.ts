@@ -1,10 +1,10 @@
-import { CompactInt, UInt64, BytesReader, Codec } from 'as-scale-codec';
+import { CompactInt, UInt64, BIT_LENGTH, Bytes } from 'as-scale-codec';
 import { DecodedData } from '../decoded-data';
 import { Extrinsic, ExtrinsicType } from './extrinsic';
 import { Utils } from '@as-substrate/core-utils';
-import { IInherent } from '../interfaces/extrinsic/iinherent';
+import { IExtrinsic } from '..';
 
-export class Inherent extends Extrinsic implements IInherent{
+export class Inherent extends Extrinsic{
     /**
      * Of inherent
      */
@@ -30,20 +30,6 @@ export class Inherent extends Extrinsic implements IInherent{
         this.arg = arg;
     }
 
-    getCallIndex(): u8[]{
-        return this.callIndex;
-    }
-    getPrefix(): u8{
-        return this.prefix;
-    }
-    getVersion(): u8{
-        return this.version;
-    }
-
-    getArgument(): Codec{
-        return this.arg;
-    }
-
     toU8a(): u8[]{
         let len = new CompactInt(ExtrinsicType.Inherent);
         let result = len.toU8a();
@@ -57,15 +43,25 @@ export class Inherent extends Extrinsic implements IInherent{
     /**
      * Convert SCALE encoded bytes to an instance of Inherent
      */
-    static fromU8Array(input: u8[]): DecodedData<Extrinsic>{
-        const bytesReader = new BytesReader(input);
-        const version: u8 = bytesReader.readByte();
-        const callIndex: u8[] = bytesReader.readBytes(2);
-        const compactPrefix: u8 = bytesReader.readByte();
-        const arg: UInt64 = bytesReader.readUInt64();
+    static fromU8Array(input: u8[]): DecodedData<IExtrinsic>{
+        // get only inherent bytes
+        let inherentU8a = input.slice(0, ExtrinsicType.Inherent);
+        input = input.slice(ExtrinsicType.Inherent);
 
-        const inherent = new Inherent(callIndex, version, compactPrefix, arg);
-        return new DecodedData(inherent, bytesReader.getLeftoverBytes());
+        const version = inherentU8a[0];
+        inherentU8a = inherentU8a.slice(1);
+        const callIndex = inherentU8a.slice(0, 2);
+        inherentU8a = inherentU8a.slice(2);
+        const compactPrx = inherentU8a[0];
+        inherentU8a = inherentU8a.slice(1);
+        
+        const initLen = inherentU8a.length;
+        inherentU8a.length = BIT_LENGTH.INT_64;
+        const arg = UInt64.fromU8a(inherentU8a.fill(0, initLen, inherentU8a.length));
+        inherentU8a = inherentU8a.slice(arg.encodedLength());
+
+        const inherent = new Inherent(callIndex, version, compactPrx, arg);
+        return new DecodedData(inherent, input);
     }
 
     @inline @operator('==')

@@ -2,7 +2,7 @@ import { DecodedData } from "../decoded-data";
 import { Inherent } from "./inherent";
 import { SignedTransaction } from "./signed-transaction";
 import { Bytes } from 'as-scale-codec';
-import { IExtrinsic } from "../interfaces/extrinsic/iextrinsic";
+import { IExtrinsic } from "..";
 /**
  * Type of extrinsic
  * values represent the fixed byte length of each Extrinsic type
@@ -29,42 +29,38 @@ export abstract class Extrinsic implements IExtrinsic{
         this.typeId = typeId;
     }
 
-
+    abstract toU8a(): u8[];
     /**
-     * Get typeId of Extrinsic
+     * Get type id of the Extrinsic
      */
-    getTypeId(): u64{
-        return this.typeId;
+    getTypeId(): i32{
+        return <i32>this.typeId;
     }
-
+    /**
+     * Get encoded length of the extrinsic
+     */
     encodedLength(): i32{
-        switch(this.typeId){
+        switch(this.getTypeId()){
             case(ExtrinsicType.Inherent):{
-                return <i32>ExtrinsicType.Inherent;
+                return ExtrinsicType.Inherent;
             }
             case(ExtrinsicType.SignedTransaction):{
-                return <i32>ExtrinsicType.SignedTransaction;
-            }
-            case(ExtrinsicType.UnsignedTransaction):{
-                return <i32>ExtrinsicType.UnsignedTransaction;
+                return ExtrinsicType.SignedTransaction;
             }
             default:{
-                throw new Error("Extrinsic: Unsupported Extrinsic type: " + this.typeId.toString());
+                throw new Error("Extrinsic: Unsupported Extrinsic type: " + this.getTypeId().toString());
             }
         }
     }
-
-    abstract toU8a(): u8[];
-
     /**
      * Checks whether the extrinsic is inherent
      * @param ext 
      */
-    static isInherent(ext: Extrinsic): bool{
-        return ext.typeId == ExtrinsicType.Inherent;
+    static isInherent(ext: IExtrinsic): bool{
+        return ext.getTypeId() == ExtrinsicType.Inherent;
     }
 
-    static fromU8Array(input: u8[]): DecodedData<Extrinsic>{
+    static fromU8Array(input: u8[]): DecodedData<IExtrinsic>{
         const cmpLen = Bytes.decodeCompactInt(input);
         input = input.slice(cmpLen.decBytes);
         const type = <i32>cmpLen.value;

@@ -26,6 +26,9 @@ export class Other extends DigestItem {
         return new DecodedData<DigestItem>(new Other(value), input);
     }
 
+    encodedLength(): i32{
+        return this.value.encodedLength() + 1;
+    }
     /**
      * SCALE Encodes the Other DigestItem into u8[]
      */
