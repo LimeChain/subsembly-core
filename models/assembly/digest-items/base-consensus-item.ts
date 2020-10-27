@@ -1,7 +1,6 @@
 import { DigestItem, DigestItemType } from ".";
 import { ByteArray, Codec } from "as-scale-codec";
 import { Utils } from "@as-substrate/core-utils";
-import { IBaseConsensusItem } from "../interfaces";
 
 export abstract class BaseConsensusItem extends DigestItem{
 

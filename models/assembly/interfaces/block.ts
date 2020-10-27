@@ -1,6 +1,6 @@
 import { Codec } from 'as-scale-codec';
-import { IHeader } from './i-header';
-import { IExtrinsic } from './extrinsic/i-extrinsic';
+import { IHeader } from './header';
+import { IExtrinsic } from './extrinsic/extrinsic';
 
 export interface IBlock extends Codec{
     /**

@@ -1,5 +1,5 @@
 {
-  "name": "@as-substrate/models",
+  "name": "@subsembly-core/models",
   "version": "1.0.0",
   "description": "Models used in AS-Based Substrate Runtimes",
   "main": "index.js",

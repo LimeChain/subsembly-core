@@ -1,5 +1,5 @@
 import { Codec } from "as-scale-codec";
-import { IExtrinsic } from "./i-extrinsic";
+import { IExtrinsic } from "./extrinsic";
 
 export interface ISignedTransaction extends IExtrinsic{
     getFrom(): Codec;

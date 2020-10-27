@@ -2,7 +2,7 @@ import { Hash, CompactInt, Bytes, BytesReader } from "as-scale-codec";
 import { Utils } from "@as-substrate/core-utils";
 import { Option, DecodedData, DigestItem } from ".";
 import { Constants } from "./constants";
-import { IHeader } from "./interfaces/i-header";
+import { IHeader } from "./interfaces/header";
 
 /**
  * Class representing a Block Header into the Substrate Runtime

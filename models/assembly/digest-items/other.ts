@@ -1,5 +1,5 @@
 import { DigestItem, DigestItemType } from ".";
-import { DecodedData } from "./..";
+import { DecodedData } from "..";
 import { ByteArray } from "as-scale-codec";
 
 /**

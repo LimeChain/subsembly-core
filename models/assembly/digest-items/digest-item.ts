@@ -1,5 +1,5 @@
 import { Other, Consensus, ChangeTrieRoot, Seal, PreRuntime } from ".";
-import { DecodedData, IDigestItem } from "./..";
+import { DecodedData } from "..";
 
 /**
  * Types of the digest items
