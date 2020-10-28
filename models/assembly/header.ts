@@ -1,5 +1,5 @@
 import { Hash, CompactInt, Bytes, BytesReader } from "as-scale-codec";
-import { Utils } from "@as-substrate/core-utils";
+import { Utils } from "@subsembly-core/utils";
 import { Option, DecodedData, DigestItem } from ".";
 import { Constants } from "./constants";
 import { IHeader } from "./interfaces/header";

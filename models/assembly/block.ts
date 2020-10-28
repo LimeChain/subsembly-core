@@ -1,7 +1,7 @@
 import { Hash, ByteArray, Bytes, CompactInt } from "as-scale-codec";
 import { Header, Extrinsic, Option, DecodedData, IHeader, IExtrinsic } from ".";
 import { Constants } from "./constants";
-import { Utils } from "@as-substrate/core-utils";
+import { Utils } from "@subsembly-core/utils";
 import { IBlock } from "./interfaces";
 
 /**

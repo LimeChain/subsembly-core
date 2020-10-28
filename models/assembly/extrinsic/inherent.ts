@@ -1,7 +1,7 @@
 import { CompactInt, UInt64, BIT_LENGTH, Bytes } from 'as-scale-codec';
 import { DecodedData } from '../decoded-data';
 import { Extrinsic, ExtrinsicType } from './extrinsic';
-import { Utils } from '@as-substrate/core-utils';
+import { Utils } from '@subsembly-core/utils';
 import { IExtrinsic } from '..';
 
 export class Inherent extends Extrinsic{

@@ -1,7 +1,7 @@
 {
-  "name": "@subsembly-core/models",
+  "name": "@subsembly-core/utils",
   "version": "1.0.0",
-  "description": "Models used in AS-Based Substrate Runtimes",
+  "description": "Core Utilities used in AS-based Substrate Runtimes",
   "main": "index.js",
   "scripts": {
     "clean": "rm -rf node_modules"

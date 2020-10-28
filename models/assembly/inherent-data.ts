@@ -1,6 +1,6 @@
 import { CompactInt, Bytes, ByteArray } from 'as-scale-codec';
 import { DecodedData } from './decoded-data';
-import { Utils } from '@as-substrate/core-utils';
+import { Utils } from '@subsembly-core/utils';
 /**
  * Class representing InherentData transactions in Substrate runtime
  */

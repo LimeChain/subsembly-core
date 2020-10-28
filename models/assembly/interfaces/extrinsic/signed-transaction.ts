@@ -7,4 +7,5 @@ export interface ISignedTransaction extends IExtrinsic{
     getAmount(): Codec;
     getNonce(): Codec;
     getSignature(): Codec;
+    getTransferBytes(): u8[];
 }

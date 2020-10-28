@@ -5,4 +5,4 @@ node_modules/
 
 # The cache for chain data in container
 .local
-
+yarn-error.log

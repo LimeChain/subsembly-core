@@ -1,5 +1,5 @@
 import { UInt64, CompactInt } from 'as-scale-codec';
-import { AccountId } from '@as-substrate/balances-module';
+import { AccountId } from '@subsembly-core/balances-module';
 export class TransactionTag{
     /**
      * fixed byte length of the transaction tag

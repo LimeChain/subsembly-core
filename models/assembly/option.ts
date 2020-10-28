@@ -1,6 +1,3 @@
-// import { T } from "as-scale-codec";
-// import { IOption } from "./interfaces/i-option";
-
 /**
  * Class representing an optional value (T or null)
  */

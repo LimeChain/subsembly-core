@@ -1,5 +1,3 @@
-import { ISignature } from "./interfaces/signature";
-
 /**
  * Class representing a Signature in the Substrate Runtime
  */

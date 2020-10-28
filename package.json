@@ -3,26 +3,11 @@
   "version": "1.0.0",
   "description": "Framework for building AssemblyScript Substrate Runtimes",
   "private": true,
-  "scripts": {
-    "clean": "yarn workspaces run clean && rm -rf node_modules",
-    "build": "cd ./src && yarn run build",
-    "test": "cd ./src && yarn run test",
-    "test:ci": "cd ./src && yarn run test:ci"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/LimeChain/subsembly-core.git"
-  },
-  "keywords": [
-    "substrate",
-    "wasm",
-    "assemblyscript",
-    "subsembly-core"
+  "workspaces": [
+    "*",
+    "modules/*"
   ],
-  "author": "Daniel Ivanov <daniel-k-ivanov>",
-  "license": "Apache-2.0",
-  "bugs": {
-    "url": "https://github.com/LimeChain/subsembly-core/issues"
-  },
-  "homepage": "https://github.com/LimeChain/subsembly-core#readme"
+  "repository": "https://github.com/LimeChain/subsembly-core.git",
+  "author": "Dastan <dastanbeksamatov@gmail.com>",
+  "license": "Apache License 2.0"
 }

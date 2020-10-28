@@ -11,4 +11,6 @@ export * from './transaction-models';
 export * from './response-codes';
 export * from './extrinsic';
 export * from './extrinsic-data';
-export * from './interfaces'
+export * from './interfaces';
+export * from './account-data';
+export * from './account-id';

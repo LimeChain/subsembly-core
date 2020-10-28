@@ -1,6 +1,6 @@
 import { DigestItem, DigestItemType } from ".";
 import { ByteArray, Codec } from "as-scale-codec";
-import { Utils } from "@as-substrate/core-utils";
+import { Utils } from "@subsembly-core/utils";
 
 export abstract class BaseConsensusItem extends DigestItem{
 
