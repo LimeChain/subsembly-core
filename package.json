@@ -2,12 +2,26 @@
   "name": "subsembly-core",
   "version": "1.0.0",
   "description": "Framework for building AssemblyScript Substrate Runtimes",
-  "private": true,
-  "workspaces": [
-    "*",
-    "modules/*"
-  ],
+  "main": "./assembly/index.ts",
+  "scripts": {
+    "asbuild": "npx asc assembly/index.ts -b build/release/as-scale-codec.wasm -t build/release/as-scale-codec.wat --sourceMap --runtime full --optimize",
+    "test:js": "npm run asbuild && node tests",
+    "test": "asp --verbose",
+    "test:ci": "asp --summary"
+  },
   "repository": "https://github.com/LimeChain/subsembly-core.git",
+  "keywords": [
+    "assemblyscript",
+    "Polkadot",
+    "Substrate"
+  ],
   "author": "Dastan <dastanbeksamatov@gmail.com>",
-  "license": "Apache License 2.0"
+  "license": "MIT",
+  "devDependencies": {
+    "assemblyscript": "^0.17.1"
+  },
+  "dependencies": {
+    "@assemblyscript/loader": "^0.17.1",
+    "as-scale-codec": "^0.1.1"
+  }
 }
