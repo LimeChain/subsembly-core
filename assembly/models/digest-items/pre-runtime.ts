@@ -1,14 +1,24 @@
 import { DigestItem, DigestItemType, BaseConsensusItem } from ".";
 import { DecodedData } from "..";
-import { ByteArray } from "as-scale-codec";
+import { ByteArray, BytesReader } from "as-scale-codec";
 
 /**
  * Class representing PreRuntime Digest Item into the Substrate Runtime
  */
 export class PreRuntime extends BaseConsensusItem {
 
-    constructor(consensusEngineId: u8[], value: ByteArray) {
+    constructor(consensusEngineId: u8[] = [], value: ByteArray = new ByteArray()) {
         super(DigestItemType.PreRuntime, consensusEngineId, value);
+    }
+    /**
+     * @description Non static constructor from bytes
+     * @param bytes SCALE encoded bytes
+     * @param index starting index
+     */
+    populateFromBytes(bytes: u8[], index: i32 = 0): void{
+        const bytesReader = new BytesReader(bytes.slice(index));
+        this.consensusEngineId = bytesReader.readBytes(BaseConsensusItem.CONSENSUS_ENGINE_ID_LENGTH);
+        this.value = bytesReader.readInto<ByteArray>();
     }
 
     /**

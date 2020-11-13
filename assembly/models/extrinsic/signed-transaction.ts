@@ -108,7 +108,11 @@ export class SignedTransaction extends Extrinsic implements ISignedTransaction{
     encodedLength(): i32{
         return this.toU8a().length;
     }
-
+    /**
+     * @description Non static constructor from bytes
+     * @param bytes SCALE encoded bytes
+     * @param index starting index
+     */
     populateFromBytes(bytes: u8[], index: i32 = 0): void {
         assert(bytes.length - index > this.getTypeId(), "SignedTransaction: Bytes array with insufficient length");
         const bytesReader = new BytesReader(bytes.slice(index));

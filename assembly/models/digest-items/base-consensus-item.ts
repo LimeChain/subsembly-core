@@ -19,7 +19,7 @@ export abstract class BaseConsensusItem extends DigestItem{
      */
     public value: ByteArray
 
-    constructor(type: DigestItemType, consensusEngineId: u8[], value: ByteArray) {
+    constructor(type: DigestItemType, consensusEngineId: u8[] = [], value: ByteArray = new ByteArray()) {
         super(type);
         assert(consensusEngineId.length == BaseConsensusItem.CONSENSUS_ENGINE_ID_LENGTH, "Base Consensus Digest Item: Consensus Engine ID is invalid");
 

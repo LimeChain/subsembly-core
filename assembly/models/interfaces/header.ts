@@ -1,6 +1,5 @@
 import { Codec } from 'as-scale-codec';
 import { DigestItem } from '../digest-items';
-import { Option } from '../option';
 
 /**
  * Header interface

@@ -1,6 +1,6 @@
 import { DigestItem, DigestItemType } from ".";
 import { DecodedData } from "..";
-import { ByteArray } from "as-scale-codec";
+import { ByteArray, BytesReader } from "as-scale-codec";
 
 /**
  * Class representing Other Digest Item into the Substrate Runtime
@@ -12,11 +12,18 @@ export class Other extends DigestItem {
      */
     public value: ByteArray
 
-    constructor(value: ByteArray) {
+    constructor(value: ByteArray = new ByteArray()) {
         super(DigestItemType.Other);
         this.value = value;
     }
-
+    /**
+     * @description Non static constructor from bytes
+     * @param bytes SCALE encoded bytes
+     * @param index starting index
+     */
+    populateFromBytes(bytes: u8[], index: i32 = 0): void{
+        this.value = BytesReader.decodeInto<ByteArray>(bytes.slice(index));
+    }
     /**
      * Instanciates Other DigestItem from SCALE Encoded Bytes
      */

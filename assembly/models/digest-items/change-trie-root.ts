@@ -1,6 +1,6 @@
 import { DigestItem, DigestItemType } from ".";
 import { DecodedData } from "..";
-import { Hash } from "as-scale-codec";
+import { BytesReader, Hash } from "as-scale-codec";
 
 /**
  * Class representing ChangeTrieRoot Digest Item into the Substrate Runtime
@@ -12,11 +12,20 @@ export class ChangeTrieRoot extends DigestItem {
      */
     public value: Hash
 
-    constructor(value: Hash) {
+    constructor(value: Hash = new Hash()) {
         super(DigestItemType.ChangeTrieRoot);
         this.value = value;
     }
 
+
+    /**
+     * @description Non static constructor from bytes
+     * @param bytes SCALE encoded bytes
+     * @param index starting index
+     */
+    populateFromBytes(bytes: u8[], index: i32 = 0): void{
+        this.value = BytesReader.decodeInto<Hash>(bytes.slice(index));
+    }
     /**
      * Instanciates Other DigestItem from SCALE Encoded Bytes
      */

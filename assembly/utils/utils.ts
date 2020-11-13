@@ -1,4 +1,4 @@
-import { Hash, ScaleString } from 'as-scale-codec';
+import { Codec, Hash, ScaleString } from 'as-scale-codec';
 
 export namespace Utils {
     /**
@@ -49,5 +49,16 @@ export namespace Utils {
         const hashBytes: u8[] = new Array<u8>(32);
         hashBytes.fill(byte);
         return Hash.fromU8a(hashBytes);
+    }
+
+    /**
+     * Converts Array of SCALE types into u8[]
+     */
+    export function arrayToU8a(array: Array<Codec>): u8[]{
+        let result: u8[] = [];
+        for(let i: i32 = 0; i < array.length; i++){
+            result.concat(array[i].toU8a());
+        }
+        return result;
     }
 }

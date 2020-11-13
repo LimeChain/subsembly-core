@@ -1,4 +1,4 @@
-import { Hash, CompactInt, Bytes, BytesReader } from "as-scale-codec";
+import { Hash, CompactInt, BytesReader } from "as-scale-codec";
 import { Utils } from "../utils";
 import { Option, DecodedData, DigestItem } from ".";
 import { Constants } from "./constants";
@@ -81,7 +81,11 @@ export class Header implements IHeader{
             + 0 + this.extrinsicsRoot.encodedLength()
             + this.number.encodedLength();
     }
-
+    /**
+     * @description Non static constructor from bytes
+     * @param bytes SCALE encoded bytes
+     * @param index starting index
+     */
     populateFromBytes(bytes: u8[], index: i32 = 0): void{
         const bytesReader = new BytesReader(bytes.slice(index));
         this.parentHash = bytesReader.readInto<Hash>();
@@ -120,8 +124,8 @@ export class Header implements IHeader{
      * @param input - SCALE encoded Header
      * TODO - avoid slicing the aray for better performance
      */
-    static fromU8Array(input: u8[]): DecodedData<IHeader> {
-        const bytesReader = new BytesReader(input);
+    static fromU8Array(input: u8[], index: i32 = 0): DecodedData<IHeader> {
+        const bytesReader = new BytesReader(input.slice(index));
 
         const parentHash = bytesReader.readInto<Hash>();
         const number = bytesReader.readInto<CompactInt>();

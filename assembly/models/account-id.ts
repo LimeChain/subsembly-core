@@ -1,4 +1,4 @@
-import { Codec } from "as-scale-codec";
+import { BytesReader, Codec } from "as-scale-codec";
 import { DecodedData } from "."
 import { Utils } from "../utils";
 
@@ -40,7 +40,11 @@ export class AccountId implements Codec {
     toU8a(): u8[]{
         return this.address;
     }
-
+    /**
+     * @description Non static constructor from bytes
+     * @param bytes SCALE encoded bytes
+     * @param index starting index
+     */
     populateFromBytes(bytes: u8[], index: i32 = 0): void{
         assert(bytes.length - index == AccountId.ADDRESS_LENGTH, "AccountId: invalid bytes length provided.");
         this.address = new Array<u8>();
@@ -50,10 +54,11 @@ export class AccountId implements Codec {
      * Instanciates new Account ID from Bytes Array
      * @param input 
      */
-    static fromU8Array(input: u8[]): DecodedData<AccountId> {
+    static fromU8Array(input: u8[], index: i32 = 0): DecodedData<AccountId> {
         assert(input.length >= AccountId.ADDRESS_LENGTH, "AccountId: Invalid bytes length provided. EOF");
-        const accId = new AccountId(input.slice(0, AccountId.ADDRESS_LENGTH));
-        return new DecodedData<AccountId>(accId, input.slice(AccountId.ADDRESS_LENGTH));
+        const bytesReader = new BytesReader(input.slice(index));
+        const accId = new AccountId(bytesReader.readBytes(AccountId.ADDRESS_LENGTH));
+        return new DecodedData<AccountId>(accId, bytesReader.getLeftoverBytes());
     }
 
     @inline @operator('==')

@@ -1,10 +1,10 @@
-import { UInt128 } from "as-scale-codec";
+import { BytesReader, Codec, UInt128 } from "as-scale-codec";
 import { DecodedData } from ".";
 
 /**
  * Class representing balance information for a given account 
  */
-export class AccountData {
+export class AccountData implements Codec {
 
     /**
      * Non-reserved part of the balance. It is the total pool what may in principle be transferred and reserved.
@@ -16,7 +16,7 @@ export class AccountData {
      */
     private reserved: UInt128;
 
-    constructor(free: UInt128, reserved: UInt128) {
+    constructor(free: UInt128 = UInt128.Zero, reserved: UInt128 = UInt128.Zero) {
         this.free = free;
         this.reserved = reserved;
     }
@@ -60,6 +60,21 @@ export class AccountData {
     }
 
     /**
+     * @description Non static constructor from bytes
+     * @param bytes SCALE encoded bytes
+     * @param index starting index
+     */
+    populateFromBytes(bytes: u8[], index: i32 = 0): void {
+        const bytesReader = new BytesReader(bytes.slice(index));
+        this.setFree(bytesReader.readInto<UInt128>());
+        this.setReserved(bytesReader.readInto<UInt128>());
+    }
+
+    encodedLength(): i32 {
+        return this.free.encodedLength() + this.reserved.encodedLength();
+    }
+
+    /**
      * Instanciates new Default AccountData object
      */
     static getDefault(): AccountData {
@@ -71,15 +86,14 @@ export class AccountData {
      * @param input - SCALE encoded AccountData
      * TODO - avoid slicing the aray for better performance
      */
-    static fromU8Array(input: u8[]): DecodedData<AccountData> {
-        const free = UInt128.fromU8a(input);
-        input = input.slice(free.encodedLength());
+    static fromU8Array(input: u8[], index: i32 = 0): DecodedData<AccountData> {
+        const bytesReader = new BytesReader(input.slice(index));
 
-        const reserved = UInt128.fromU8a(input);
-        input = input.slice(reserved.encodedLength());
+        const free = bytesReader.readInto<UInt128>();
+        const reserved = bytesReader.readInto<UInt128>();
 
         const result = new AccountData(free, reserved);
-        return new DecodedData<AccountData>(result, input);
+        return new DecodedData<AccountData>(result, bytesReader.getLeftoverBytes());
     }
 
     @inline @operator('==')

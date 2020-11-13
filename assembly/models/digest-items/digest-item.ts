@@ -90,6 +90,7 @@ export abstract class DigestItem{
         return this.typeId;
     }
 
+    abstract populateFromBytes(bytes: u8[], index: i32): void;
     abstract encodedLength(): i32;
     abstract toU8a(): u8[];
     abstract equals(other:DigestItem): bool;

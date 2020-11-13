@@ -1,4 +1,4 @@
-import { Hash, ByteArray, Bytes, CompactInt, BytesReader } from "as-scale-codec";
+import { Hash, ByteArray, CompactInt, BytesReader } from "as-scale-codec";
 import { Header, Extrinsic, Option, DecodedData, IHeader, IExtrinsic } from ".";
 import { Constants } from "./constants";
 import { Utils } from "../utils";
@@ -85,7 +85,11 @@ export class Block implements IBlock{
         }
         return len;
     }
-
+    /**
+     * @description Non static constructor from bytes
+     * @param bytes SCALE encoded bytes
+     * @param index starting index
+     */
     populateFromBytes(bytes: u8[], index: i32 = 0): void{
         const bytesReader = new BytesReader(bytes.slice(index));
         this.header = bytesReader.readInto<Header>();
