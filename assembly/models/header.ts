@@ -32,7 +32,13 @@ export class Header implements IHeader{
      */
     public digests: Option<DigestItem[]>
 
-    constructor(parentHash: Hash, number: CompactInt, stateRoot: Hash, extrinsicsRoot: Hash, digests: Option<DigestItem[]>) {
+    constructor(
+        parentHash: Hash = new Hash(), 
+        number: CompactInt = new CompactInt(), 
+        stateRoot: Hash = new Hash(), 
+        extrinsicsRoot: Hash = new Hash(), 
+        digests: Option<DigestItem[]> = new Option([]))
+    {
         this.parentHash = parentHash;
         this.number = number;
         this.stateRoot = stateRoot;
@@ -68,12 +74,21 @@ export class Header implements IHeader{
         return <DigestItem[]>this.digests.unwrap();
     }
     /**
-     * Encoded length of the header
+     * @description Encoded length of the header
      */
     encodedLength(): i32{
         return this.stateRoot.encodedLength() + this.parentHash.encodedLength() 
             + 0 + this.extrinsicsRoot.encodedLength()
             + this.number.encodedLength();
+    }
+
+    populateFromBytes(bytes: u8[], index: i32 = 0): void{
+        const bytesReader = new BytesReader(bytes.slice(index));
+        this.parentHash = bytesReader.readInto<Hash>();
+        this.number = bytesReader.readInto<CompactInt>();
+        this.stateRoot = bytesReader.readInto<Hash>();
+        this.extrinsicsRoot = bytesReader.readInto<Hash>();
+        this.digests = Header.decodeOptionalDigest(bytesReader.getLeftoverBytes()).getResult();
     }
 
     /**
@@ -108,10 +123,10 @@ export class Header implements IHeader{
     static fromU8Array(input: u8[]): DecodedData<IHeader> {
         const bytesReader = new BytesReader(input);
 
-        const parentHash = bytesReader.readHash();
-        const number = bytesReader.readCompactInt();
-        const stateRoot = bytesReader.readHash();
-        const extrinsicsRoot = bytesReader.readHash();
+        const parentHash = bytesReader.readInto<Hash>();
+        const number = bytesReader.readInto<CompactInt>();
+        const stateRoot = bytesReader.readInto<Hash>();
+        const extrinsicsRoot = bytesReader.readInto<Hash>();
 
         const digest = this.decodeOptionalDigest(bytesReader.getLeftoverBytes());
         

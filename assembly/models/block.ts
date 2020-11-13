@@ -1,8 +1,9 @@
-import { Hash, ByteArray, Bytes, CompactInt } from "as-scale-codec";
+import { Hash, ByteArray, Bytes, CompactInt, BytesReader } from "as-scale-codec";
 import { Header, Extrinsic, Option, DecodedData, IHeader, IExtrinsic } from ".";
 import { Constants } from "./constants";
 import { Utils } from "../utils";
 import { IBlock } from "./interfaces";
+import { Inherent } from "./extrinsic";
 
 /**
  * Class representing a Block into the Substrate Runtime
@@ -36,7 +37,7 @@ export class Block implements IBlock{
      */
     public justification: Option<ByteArray>
 
-    constructor(header: IHeader, body: IExtrinsic[]) {
+    constructor(header: IHeader = new Header(), body: IExtrinsic[] = []) {
         this.header = header;
         this.headerHash = new Option<Hash>(null);
         this.body = body;
@@ -84,24 +85,34 @@ export class Block implements IBlock{
         }
         return len;
     }
+
+    populateFromBytes(bytes: u8[], index: i32 = 0): void{
+        const bytesReader = new BytesReader(bytes.slice(index));
+        this.header = bytesReader.readInto<Header>();
+        let extrinsics: IExtrinsic[] = [];
+        const extrinsicsLength = bytesReader.readInto<CompactInt>();
+        for(let i=0; i < <i32>(extrinsicsLength.value); i++){
+            const decodedExtrinsic: IExtrinsic= bytesReader.readInto<Extrinsic>();
+            extrinsics.push(decodedExtrinsic);
+        }
+        this.body = extrinsics;
+    }
     /**
      * Instanciates new Block object from SCALE encoded byte array
      * @param input - SCALE encoded Block
      */
     static fromU8Array(input: u8[]): DecodedData<IBlock> {
-        const decodedHeader: DecodedData<IHeader> = Header.fromU8Array(input);
-        input = decodedHeader.getInput();
+        const bytesReader = new BytesReader(input);
+        const header: IHeader = bytesReader.readInto<Header>();
 
-        const extrinsicsLength = Bytes.decodeCompactInt(input);
-        input = input.slice(extrinsicsLength.decBytes);
+        const extrinsicsLength = bytesReader.readInto<CompactInt>();
         let extrinsics: IExtrinsic[] = [];
         for (let i = 0; i < <i32>extrinsicsLength.value; i++) {
-            const decodedExtrinsic: DecodedData<IExtrinsic> = Extrinsic.fromU8Array(input);
-            extrinsics.push(decodedExtrinsic.getResult());
-            input = decodedExtrinsic.getInput();
+            const decodedExtrinsic: IExtrinsic = bytesReader.readInto<Inherent>();
+            extrinsics.push(decodedExtrinsic);
         }
         
-        const block = new Block(decodedHeader.getResult(), extrinsics);
+        const block = new Block(header, extrinsics);
         return new DecodedData(block, input);
     }
 

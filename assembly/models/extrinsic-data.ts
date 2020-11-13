@@ -56,6 +56,8 @@ export class ExtrinsicData implements IExtrinsicData{
     encodedLength(): i32{
         return this.toU8a().length;
     }
+
+    populateFromBytes(bytes: u8[], index: i32 = 0): void{}
     /**
      * Initializes ExtrinsicData from bytes
      * @param input 

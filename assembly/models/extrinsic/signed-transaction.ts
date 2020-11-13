@@ -1,11 +1,12 @@
-import { Hash, UInt64, BIT_LENGTH, Bool, CompactInt } from "as-scale-codec";
-import { Signature, DecodedData, IExtrinsic } from "..";
+import { Hash, UInt64, BIT_LENGTH, Bool, CompactInt, Codec, BytesReader } from "as-scale-codec";
+import { Signature, DecodedData } from "..";
+import { IExtrinsic, ISignedTransaction } from "../interfaces";
 import { Extrinsic, ExtrinsicType } from "./extrinsic";
 
 /**
  * Class representing an Extrinsic in the Substrate Runtime
  */
-export class SignedTransaction extends Extrinsic {
+export class SignedTransaction extends Extrinsic implements ISignedTransaction{
     
     /**
      * from address 
@@ -37,7 +38,14 @@ export class SignedTransaction extends Extrinsic {
      */
     public exhaustResourcesWhenNotFirst: Bool
 
-    constructor(from: Hash, to: Hash, amount: UInt64, nonce: UInt64, signature: Signature, exhaustResourcesWhenNotFirst: Bool) {
+    constructor(
+        from: Hash = new Hash(), 
+        to: Hash = new Hash(), 
+        amount: UInt64 = new UInt64(), 
+        nonce: UInt64 = new UInt64(), 
+        signature: Signature = new Signature(), 
+        exhaustResourcesWhenNotFirst: Bool = new Bool()) 
+    {
         super(ExtrinsicType.SignedTransaction);
         this.from = from;
         this.to = to;
@@ -62,6 +70,13 @@ export class SignedTransaction extends Extrinsic {
     }
 
     /**
+     * Get type id of the Extrinsic
+     */
+    getTypeId(): i32{
+        return <i32>this.typeId;
+    }
+
+    /**
      * get SCALE encoded bytes for the Transfer instance
      */
     getTransferBytes(): u8[]{
@@ -69,6 +84,41 @@ export class SignedTransaction extends Extrinsic {
             .concat(this.to.toU8a())
             .concat(this.amount.toU8a())
             .concat(this.nonce.toU8a())
+    }
+    getAmount(): Codec{
+        return this.amount;
+    }
+
+    getNonce(): Codec{
+        return this.nonce;
+    }
+
+    getSignature(): Signature{
+        return this.signature;
+    }
+
+    getFrom(): Codec{
+        return this.from;
+    }
+
+    getTo(): Codec{
+        return this.to;
+    }
+
+    encodedLength(): i32{
+        return this.toU8a().length;
+    }
+
+    populateFromBytes(bytes: u8[], index: i32 = 0): void {
+        assert(bytes.length - index > this.getTypeId(), "SignedTransaction: Bytes array with insufficient length");
+        const bytesReader = new BytesReader(bytes.slice(index));
+        let length = bytesReader.readInto<CompactInt>();
+        assert(<i32>length.value == this.typeId, "SignedTransaction: Incorrectly encoded SignedTransaction");
+        this.from = bytesReader.readInto<Hash>();
+        this.to = bytesReader.readInto<Hash>();
+        this.amount = bytesReader.readInto<UInt64>();
+        this.nonce = bytesReader.readInto<UInt64>();
+        this.signature = bytesReader.readInto<Signature>();
     }
 
     /**

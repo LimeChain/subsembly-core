@@ -1,10 +1,11 @@
+import { Codec } from "as-scale-codec";
 import { DecodedData } from "."
 import { Utils } from "../utils";
 
 /**
  * Thin wrapper of SCALE Hash that represents Account ID (SS58)
  */
-export class AccountId {
+export class AccountId implements Codec {
 
     /**
      * Length of Address in Bytes
@@ -16,7 +17,7 @@ export class AccountId {
      */
     private address: u8[];
 
-    constructor(bytes: u8[]) {
+    constructor(bytes: u8[] = []) {
         assert(bytes.length == AccountId.ADDRESS_LENGTH, "AccountId: invalid bytes length provided.");
         this.address = new Array<u8>();
         this.address = this.address.concat(bytes);
@@ -36,6 +37,15 @@ export class AccountId {
         return this.address.length;
     }
 
+    toU8a(): u8[]{
+        return this.address;
+    }
+
+    populateFromBytes(bytes: u8[], index: i32 = 0): void{
+        assert(bytes.length - index == AccountId.ADDRESS_LENGTH, "AccountId: invalid bytes length provided.");
+        this.address = new Array<u8>();
+        this.address = this.address.concat(bytes.slice(index, AccountId.ADDRESS_LENGTH));
+    }
     /**
      * Instanciates new Account ID from Bytes Array
      * @param input 

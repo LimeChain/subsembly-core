@@ -1,7 +1,7 @@
 import { Codec } from "as-scale-codec";
 import { IExtrinsic } from "./extrinsic";
 
-export interface IInherent extends IExtrinsic{
+export interface IInherent{
     /**
      * @description Get call index of the Inherent object
      */

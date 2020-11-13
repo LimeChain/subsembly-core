@@ -1,10 +1,10 @@
-import { CompactInt, UInt64, BIT_LENGTH, Bytes } from 'as-scale-codec';
+import { CompactInt, UInt64, BIT_LENGTH, Codec, BytesReader, Byte } from 'as-scale-codec';
 import { DecodedData } from '../decoded-data';
 import { Extrinsic, ExtrinsicType } from './extrinsic';
 import { Utils } from "../../utils";
-import { IExtrinsic } from '..';
+import { IExtrinsic, IInherent } from '../interfaces';
 
-export class Inherent extends Extrinsic{
+export class Inherent extends Extrinsic implements IInherent{
     /**
      * Of inherent
      */
@@ -22,12 +22,39 @@ export class Inherent extends Extrinsic{
      */
     public arg: UInt64;
 
-    constructor(callIndex: u8[], version: u8, prefix: u8, arg: UInt64){
+    constructor(callIndex: u8[] = [], version: u8 = 0, prefix: u8 = 0, arg: UInt64 = new UInt64()){
         super(ExtrinsicType.Inherent);
         this.callIndex = callIndex;
         this.version = version;
         this.prefix = prefix;
         this.arg = arg;
+    }
+
+    /**
+     * Get type id of the Extrinsic
+     */
+    getTypeId(): i32{
+        return <i32>this.typeId;
+    }
+
+    getArgument(): Codec{
+        return this.arg;
+    }
+
+    getVersion(): u8{
+        return this.version;
+    }
+
+    getPrefix(): u8{
+        return this.prefix;
+    }
+
+    getCallIndex(): u8[]{
+        return this.callIndex;
+    }
+
+    encodedLength(): i32{
+        return this.toU8a().length;
     }
 
     toU8a(): u8[]{
@@ -41,26 +68,29 @@ export class Inherent extends Extrinsic{
     }
 
     /**
+     * @description Non-static constructor method used to populate defined properties of the model
+     * @param bytes SCALE encoded bytes
+     * @param index index to start decoding the bytes from
+     */
+    populateFromBytes(bytes: u8[], index: i32 = 0): void {
+        const bytesReader = new BytesReader(bytes.slice(index));
+        let length = bytesReader.readInto<CompactInt>();
+        assert(<i32>length.value == <i32>this.typeId, "Inherent: incorrectly encoded Inherent");
+        this.version = bytesReader.readInto<Byte>().value;
+        this.callIndex = bytesReader.readBytes(2);
+        this.prefix = bytesReader.readInto<Byte>().value;
+        this.arg = bytesReader.readInto<UInt64>();
+    }
+    /**
      * Convert SCALE encoded bytes to an instance of Inherent
      */
     static fromU8Array(input: u8[]): DecodedData<IExtrinsic>{
-        // get only inherent bytes
-        let inherentU8a = input.slice(0, ExtrinsicType.Inherent);
-        input = input.slice(ExtrinsicType.Inherent);
-
-        const version = inherentU8a[0];
-        inherentU8a = inherentU8a.slice(1);
-        const callIndex = inherentU8a.slice(0, 2);
-        inherentU8a = inherentU8a.slice(2);
-        const compactPrx = inherentU8a[0];
-        inherentU8a = inherentU8a.slice(1);
-        
-        const initLen = inherentU8a.length;
-        inherentU8a.length = BIT_LENGTH.INT_64;
-        const arg = UInt64.fromU8a(inherentU8a.fill(0, initLen, inherentU8a.length));
-        inherentU8a = inherentU8a.slice(arg.encodedLength());
-
-        const inherent = new Inherent(callIndex, version, compactPrx, arg);
+        const bytesReader = new BytesReader(input);
+        const version = bytesReader.readInto<Byte>().value;
+        const callIndex = bytesReader.readBytes(2);
+        const prefix = bytesReader.readInto<Byte>().value;
+        const arg = bytesReader.readInto<UInt64>();
+        const inherent = new Inherent(callIndex, version, prefix, arg);
         return new DecodedData(inherent, input);
     }
 

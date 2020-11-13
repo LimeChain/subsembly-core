@@ -25,7 +25,7 @@ export enum ExtrinsicType{
 export abstract class Extrinsic implements IExtrinsic{
     public typeId: u64;
 
-    constructor(typeId: u64){
+    constructor(typeId: u64 = ExtrinsicType.Inherent){
         this.typeId = typeId;
     }
 
@@ -37,28 +37,14 @@ export abstract class Extrinsic implements IExtrinsic{
         return <i32>this.typeId;
     }
     /**
-     * Get encoded length of the extrinsic
-     */
-    encodedLength(): i32{
-        switch(this.getTypeId()){
-            case(ExtrinsicType.Inherent):{
-                return ExtrinsicType.Inherent;
-            }
-            case(ExtrinsicType.SignedTransaction):{
-                return ExtrinsicType.SignedTransaction;
-            }
-            default:{
-                throw new Error("Extrinsic: Unsupported Extrinsic type: " + this.getTypeId().toString());
-            }
-        }
-    }
-    /**
      * Checks whether the extrinsic is inherent
      * @param ext 
      */
     static isInherent(ext: IExtrinsic): bool{
         return ext.getTypeId() == ExtrinsicType.Inherent;
     }
+    abstract encodedLength(): i32;
+    abstract populateFromBytes(bytes: u8[], index: i32): void;
 
     static fromU8Array(input: u8[]): DecodedData<IExtrinsic>{
         const cmpLen = Bytes.decodeCompactInt(input);
