@@ -2,7 +2,7 @@ import { Codec } from 'as-scale-codec';
 import { IHeader } from './header';
 import { IExtrinsic } from './extrinsic/extrinsic';
 
-export interface IBlock extends Codec{
+export interface IBlock extends Codec {
     /**
      * @description Get Header object of the Block
      */

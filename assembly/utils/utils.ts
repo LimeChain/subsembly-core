@@ -33,10 +33,10 @@ export namespace Utils {
      * Converts array of strings to array of bytes
      * @param args array of strings
      */
-    export function stringsToBytes(args: string[], scale: bool): u8[]{
+    export function stringsToBytes(args: string[], scale: bool): u8[] {
         let result: u8[] = [];
-        for (let i=0; i<args.length ; i++){
-            const strScale = new ScaleString(args[i]); 
+        for (let i = 0; i < args.length; i++) {
+            const strScale = new ScaleString(args[i]);
             result = result.concat(scale ? strScale.toU8a() : strScale.values);
         }
         return result;
@@ -54,9 +54,9 @@ export namespace Utils {
     /**
      * Converts Array of SCALE types into u8[]
      */
-    export function arrayToU8a(array: Array<Codec>): u8[]{
+    export function arrayToU8a(array: Array<Codec>): u8[] {
         let result: u8[] = [];
-        for(let i: i32 = 0; i < array.length; i++){
+        for (let i: i32 = 0; i < array.length; i++) {
             result.concat(array[i].toU8a());
         }
         return result;

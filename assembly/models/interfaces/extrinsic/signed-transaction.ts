@@ -1,6 +1,6 @@
 import { Codec } from "as-scale-codec";
 
-export interface ISignedTransaction{
+export interface ISignedTransaction {
     getFrom(): Codec;
     getTo(): Codec;
     getAmount(): Codec;

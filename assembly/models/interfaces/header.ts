@@ -4,23 +4,23 @@ import { DigestItem } from '../digest-items';
 /**
  * Header interface
  */
-export interface IHeader extends Codec{
+export interface IHeader extends Codec {
     /**
      * @description Get parent hash of the Header
      */
-    getParentHash(): Codec;
+    getParentHash<T extends Codec>(): T;
     /**
      * @description Get extrinsicsRoot property of the Header
      */
-    getExtrinsicsRoot(): Codec;
+    getExtrinsicsRoot<T extends Codec>(): T;
     /**
      * @description Get Block's number
      */
-    getNumber(): Codec;
+    getNumber<T extends Codec>(): T;
     /**
      * @description Get the state root of the Header
      */
-    getStateRoot(): Codec;
+    getStateRoot<T extends Codec>(): T;
     /**
      * @description Get the array of digests of the Header
      */

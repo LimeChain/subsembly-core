@@ -4,7 +4,7 @@ import { Extrinsic, ExtrinsicType } from './extrinsic';
 import { Utils } from "../../utils";
 import { IExtrinsic, IInherent } from '../interfaces';
 
-export class Inherent extends Extrinsic implements IInherent{
+export class Inherent extends Extrinsic implements IInherent {
     /**
      * Of inherent
      */
@@ -22,7 +22,7 @@ export class Inherent extends Extrinsic implements IInherent{
      */
     public arg: UInt64;
 
-    constructor(callIndex: u8[] = [], version: u8 = 0, prefix: u8 = 0, arg: UInt64 = new UInt64()){
+    constructor(callIndex: u8[] = [], version: u8 = 0, prefix: u8 = 0, arg: UInt64 = new UInt64()) {
         super(ExtrinsicType.Inherent);
         this.callIndex = callIndex;
         this.version = version;
@@ -33,31 +33,31 @@ export class Inherent extends Extrinsic implements IInherent{
     /**
      * Get type id of the Extrinsic
      */
-    getTypeId(): i32{
+    getTypeId(): i32 {
         return <i32>this.typeId;
     }
 
-    getArgument(): Codec{
+    getArgument(): Codec {
         return this.arg;
     }
 
-    getVersion(): u8{
+    getVersion(): u8 {
         return this.version;
     }
 
-    getPrefix(): u8{
+    getPrefix(): u8 {
         return this.prefix;
     }
 
-    getCallIndex(): u8[]{
+    getCallIndex(): u8[] {
         return this.callIndex;
     }
 
-    encodedLength(): i32{
+    encodedLength(): i32 {
         return this.toU8a().length;
     }
 
-    toU8a(): u8[]{
+    toU8a(): u8[] {
         let len = new CompactInt(ExtrinsicType.Inherent);
         let result = len.toU8a();
         result = result.concat([this.version])
@@ -84,7 +84,7 @@ export class Inherent extends Extrinsic implements IInherent{
     /**
      * Convert SCALE encoded bytes to an instance of Inherent
      */
-    static fromU8Array(input: u8[]): DecodedData<IExtrinsic>{
+    static fromU8Array(input: u8[]): DecodedData<IExtrinsic> {
         const bytesReader = new BytesReader(input);
         const version = bytesReader.readInto<Byte>().value;
         const callIndex = bytesReader.readBytes(2);
@@ -95,7 +95,7 @@ export class Inherent extends Extrinsic implements IInherent{
     }
 
     @inline @operator('==')
-    static eq(a: Inherent, b: Inherent): bool{
+    static eq(a: Inherent, b: Inherent): bool {
         return Utils.areArraysEqual(a.callIndex, b.callIndex) &&
             a.prefix == b.prefix &&
             a.version == b.version &&
@@ -103,7 +103,7 @@ export class Inherent extends Extrinsic implements IInherent{
     }
 
     @inline @operator('!=')
-    static notEq(a: Inherent, b: Inherent): bool{
+    static notEq(a: Inherent, b: Inherent): bool {
         return !Inherent.eq(a, b);
     }
 }
