@@ -33,7 +33,7 @@ export namespace Utils {
      * Converts array of strings to array of bytes
      * @param args array of strings
      */
-    export function stringsToBytes(args: string[], scale: bool): u8[]{
+    export function stringsToBytes(args: string[], scale: bool = true): u8[]{
         let result: u8[] = [];
         for (let i=0; i<args.length ; i++){
             const strScale = new ScaleString(args[i]); 

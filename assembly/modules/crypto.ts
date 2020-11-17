@@ -1,4 +1,4 @@
-import { Signature, AccountId } from '../models';
+import { IAccountId, ISignature } from '../models';
 import { ext_crypto_sr25519_verify_version_2 } from '.';
 import { Serialiser } from '../utils';
 
@@ -12,8 +12,8 @@ export namespace Crypto{
      * @param msg message to be verified
      * @param sender 
      */
-    export function verifySignature(signature: Signature, msg: u8[], sender: AccountId): bool{
-        const serialisedSign: i32 = Serialiser.getPointerToBytes(signature.value);
+    export function verifySignature(signature: ISignature, msg: u8[], sender: IAccountId): bool{
+        const serialisedSign: i32 = Serialiser.getPointerToBytes(signature.getValue());
         const serialiseMsg: u64 = Serialiser.serialiseResult(msg);
         const serialisedSender: i32 = Serialiser.getPointerToBytes(sender.getAddress());
         const result: i32 = ext_crypto_sr25519_verify_version_2(serialisedSign, serialiseMsg, serialisedSender);

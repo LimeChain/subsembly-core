@@ -1,11 +1,12 @@
-import { BytesReader, Codec } from "as-scale-codec";
+import { BytesReader } from "as-scale-codec";
 import { DecodedData } from "."
 import { Utils } from "../utils";
+import { IAccountId } from "./interfaces";
 
 /**
  * Thin wrapper of SCALE Hash that represents Account ID (SS58)
  */
-export class AccountId implements Codec {
+export class AccountId implements IAccountId {
 
     /**
      * Length of Address in Bytes

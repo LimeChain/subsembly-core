@@ -8,3 +8,5 @@ export * from './decoded-data';
 export * from './extrinsic-data';
 export * from './digest-items/base-consensus-item';
 export * from './digest-items/digest-item';
+export * from './account-id';
+export * from './inherent-data';
