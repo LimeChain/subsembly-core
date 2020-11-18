@@ -1,7 +1,7 @@
 import { Codec } from 'as-scale-codec';
 
 /**
- * Interface for AccountId
+ * @description Interface for AccountId
  */
 export interface IAccountId extends Codec{
     /**

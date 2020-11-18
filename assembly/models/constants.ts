@@ -1,3 +1,6 @@
+/**
+ * @description Class representing well-known constants
+ */
 export namespace Constants {
 
     /**

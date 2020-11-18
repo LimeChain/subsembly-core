@@ -2,7 +2,7 @@ import { BytesReader } from "as-scale-codec";
 import { ISignature } from "./interfaces";
 
 /**
- * Class representing a Signature in the Substrate Runtime
+ * @description Class representing a Signature in the Substrate Runtime
  */
 export class Signature implements ISignature {
 
@@ -22,13 +22,23 @@ export class Signature implements ISignature {
         this.value = this.value.concat(input);
     }
 
+    /**
+     * @description Converts to SCALE encoded bytes
+     */
     toU8a(): u8[]{
         return this.value;
     }
 
+    /**
+     * @description Get value of the instance
+     */
     getValue(): u8[]{
         return this.value;
     }
+
+    /**
+     * @description Encoded byte length of the instance
+     */
     encodedLength(): i32{
         return Signature.SIGNATURE_LENGTH;
     }
@@ -42,6 +52,12 @@ export class Signature implements ISignature {
         const bytesReader = new BytesReader(bytes.slice(index));
         this.value = bytesReader.readBytes(Signature.SIGNATURE_LENGTH);
     }
+
+    /**
+     * @description Overloaded == operator
+     * @param a 
+     * @param b 
+     */
     @inline @operator('==')
     static eq(a: Signature, b: Signature): bool {
         let areEqual = true;
@@ -54,6 +70,9 @@ export class Signature implements ISignature {
         return areEqual;
     }
 
+    /**
+     * @description Returns string representation
+     */
     toString(): string {
         return this.value.toString();
     }

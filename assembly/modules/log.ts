@@ -1,6 +1,10 @@
 import { Serialiser, Utils } from "../utils";
 import { ext_logging_log_version_1 } from './env';
 
+/**
+ * @description Logging class for displaying messages to the Host
+ */
+
 export class Log {
     public static readonly LOG_TARGET: string = "runtime";
     public static readonly ERROR_LEVEL: i32 = 0;
@@ -8,7 +12,7 @@ export class Log {
     public static readonly INFO_LEVEL: i32 = 2;
     public static readonly DEBUG_LEVEL: i32 = 3;
     /**
-     * Base function for logging
+     * @description Base function for logging
      * @param logLevel 
      * @param message 
      */
@@ -20,14 +24,14 @@ export class Log {
     }
 
     /**
-     * Displays info message to the Host
+     * @description Displays info message to the Host
      * @param message message to log
      */
     static info(message: string): void {
         this._baseLog(this.INFO_LEVEL, message);
     }
     /**
-     * Displays warning message to the Host
+     * @description Displays warning message to the Host
      * @param message 
      */
     static warn(message: string): void {
@@ -35,7 +39,7 @@ export class Log {
     }
 
     /**
-     * Sends error message to the Host
+     * @description Sends error message to the Host
      * @param message 
      */
     static error(message: string): void {
@@ -43,7 +47,7 @@ export class Log {
     }
 
     /**
-     * Displays debug message to the Host
+     * @description Displays debug message to the Host
      * @param message 
      */
     static debug(message: string): void {

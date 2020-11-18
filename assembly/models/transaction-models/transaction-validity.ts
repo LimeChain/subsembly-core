@@ -1,3 +1,7 @@
+/**
+ * @description Class representing TransactionValidity into Substrate runtime
+ */
+
 export class TransactionValidity{
     public valid: bool;
     public error: u8[];

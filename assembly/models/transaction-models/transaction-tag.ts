@@ -1,5 +1,9 @@
-import { UInt64, CompactInt } from 'as-scale-codec';
+import { CompactInt, UInt64 } from 'as-scale-codec';
 import { AccountId } from "..";
+
+/**
+ * @description Class representing TransactionTag to Substrate Runtime
+ */
 export class TransactionTag{
     /**
      * fixed byte length of the transaction tag
@@ -19,6 +23,9 @@ export class TransactionTag{
         this.nonce = nonce;
     }
 
+    /**
+     * @description Converts to SCALE encoded bytes
+     */
     toU8a(): u8[]{
         const lenCompact = new CompactInt(TransactionTag.TAG_LEN);
         const res: u8[] = lenCompact.toU8a();

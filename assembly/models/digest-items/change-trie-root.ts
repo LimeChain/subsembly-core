@@ -1,9 +1,9 @@
+import { BytesReader, Hash } from "as-scale-codec";
 import { DigestItem, DigestItemType } from ".";
 import { DecodedData } from "..";
-import { BytesReader, Hash } from "as-scale-codec";
 
 /**
- * Class representing ChangeTrieRoot Digest Item into the Substrate Runtime
+ * @description Class representing ChangeTrieRoot Digest Item into the Substrate Runtime
  */
 export class ChangeTrieRoot extends DigestItem {
 
@@ -27,7 +27,7 @@ export class ChangeTrieRoot extends DigestItem {
         this.value = BytesReader.decodeInto<Hash>(bytes.slice(index));
     }
     /**
-     * Instanciates Other DigestItem from SCALE Encoded Bytes
+     * @description Instanciates Other DigestItem from SCALE Encoded Bytes
      */
     static fromU8Array(input: u8[]): DecodedData<DigestItem> {
         const value = Hash.fromU8a(input);
@@ -35,11 +35,14 @@ export class ChangeTrieRoot extends DigestItem {
         return new DecodedData<DigestItem>(new ChangeTrieRoot(value), input);
     }
 
+    /**
+     * @description Encoded byte length of the instance
+     */
     encodedLength(): i32{
         return this.value.encodedLength() + 1;
     }
     /**
-     * SCALE Encodes the ChangeTrieRoot DigestItem into u8[]
+     * @description SCALE Encodes the ChangeTrieRoot DigestItem into u8[]
      */
     toU8a(): u8[] {
         let encoded: u8[] = [<u8>DigestItemType.ChangeTrieRoot];
@@ -47,7 +50,7 @@ export class ChangeTrieRoot extends DigestItem {
     }
 
     /**
-     * Checks whether the value passed is equal to this instance
+     * @description Checks whether the value passed is equal to this instance
      * @param other
      */
     equals(other: ChangeTrieRoot): bool {

@@ -1,5 +1,8 @@
 import { Codec } from "as-scale-codec";
 
+/**
+ * @description Interface for Option Model
+ */
 export interface IOption<T> extends Codec{
     /**
      * @description Checks whether the `Option` contains a value.

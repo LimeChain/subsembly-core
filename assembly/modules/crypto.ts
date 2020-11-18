@@ -1,13 +1,13 @@
-import { IAccountId, ISignature } from '../models';
 import { ext_crypto_sr25519_verify_version_2 } from '.';
+import { IAccountId, ISignature } from '../models';
 import { Serialiser } from '../utils';
 
 /**
- * Useful crypto related functions
+ * @description Useful crypto related functions
  */
 export namespace Crypto{
     /**
-     * Verifies the message and signature of the extrinsic
+     * @description Verifies the message and signature of the extrinsic
      * @param signature 
      * @param msg message to be verified
      * @param sender 

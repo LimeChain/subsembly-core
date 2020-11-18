@@ -1,14 +1,18 @@
-import { CompactInt, UInt32, Bytes, ByteArray, BIT_LENGTH } from 'as-scale-codec';
+import { BIT_LENGTH, ByteArray, Bytes, BytesReader, CompactInt, UInt32 } from 'as-scale-codec';
 import { DecodedData } from './decoded-data';
 import { IExtrinsicData } from './interfaces';
-export class ExtrinsicData implements IExtrinsicData{
+
+/**
+ * @description Model that keeps the map of extrinsics to their indices
+ */
+export class ExtrinsicData implements IExtrinsicData {
     /**
-     * Extrinsic data for the current block 
+     * @description Extrinsic data for the current block 
      * (maps an extrinsic's index to its data/bytes)
      */
     public data: Map<UInt32, ByteArray>;
     
-    constructor(data: Map<UInt32, ByteArray>){
+    constructor(data: Map<UInt32, ByteArray> = new Map<UInt32, ByteArray>()){
         this.data = data;
     }
 
@@ -26,7 +30,7 @@ export class ExtrinsicData implements IExtrinsicData{
     }
 
     /**
-     * Enumerated items, from which orderedTrieRoot will get 
+     * @description Enumerated items, from which orderedTrieRoot will get 
      * The items consist of a SCALE encoded array containing only values, corresponding 
      * key of each value is the index of the item in the array, starting at 0.
      * In our case same as toU8a() but with only values concatenated
@@ -45,10 +49,18 @@ export class ExtrinsicData implements IExtrinsicData{
         return result;
     }
 
+    /**
+     * @description Get data of the instance
+     */
     getData(): Map<UInt32, ByteArray>{
         return this.data; 
     }
 
+    /**
+     * @description Insert entry to the map
+     * @param key 
+     * @param value 
+     */
     insert(key: UInt32, value: ByteArray): void {
         this.data.set(key, value);
     }
@@ -61,10 +73,18 @@ export class ExtrinsicData implements IExtrinsicData{
      * @param bytes SCALE encoded bytes
      * @param index starting index
      */
-    populateFromBytes(bytes: u8[], index: i32 = 0): void{}
+    populateFromBytes(bytes: u8[], index: i32 = 0): void {
+        const bytesReader = new BytesReader(bytes.slice(index));
+        const lenComp = bytesReader.readInto<CompactInt>();
+        for(let i: i32 = 0; i < lenComp.value; i++){
+            const key = bytesReader.readInto<UInt32>();
+            const value = bytesReader.readInto<ByteArray>();
+            this.data.set(key, value);
+        }
+    }
     /**
-     * Initializes ExtrinsicData from bytes
-     * @param input 
+     * @description Initializes ExtrinsicData from bytes
+     * @param input SCALE encoded bytes
      */
     static fromU8Array(input: u8[]): DecodedData<ExtrinsicData>{
         const data: Map<UInt32, ByteArray> = new Map();
@@ -79,9 +99,9 @@ export class ExtrinsicData implements IExtrinsicData{
         }
         const extcsData = new ExtrinsicData(data);
         return new DecodedData<ExtrinsicData>(extcsData, input);
-    }
-/**
-     * Overloaded equals operator
+    }   
+    /**
+     * @description Overloaded equals operator
      * @param a instance of ExtrinsicData
      * @param b Instance of ExtrinsicData
      */

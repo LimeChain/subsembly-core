@@ -1,12 +1,12 @@
-import { Hash, ByteArray, CompactInt, BytesReader } from "as-scale-codec";
-import { Header, Extrinsic, Option, DecodedData, IHeader, IExtrinsic } from ".";
-import { Constants } from "./constants";
+import { ByteArray, BytesReader, CompactInt, Hash } from "as-scale-codec";
+import { DecodedData, Extrinsic, Header, IExtrinsic, IHeader, Option } from ".";
 import { Utils } from "../utils";
-import { IBlock } from "./interfaces";
+import { Constants } from "./constants";
 import { Inherent } from "./extrinsic";
+import { IBlock } from "./interfaces";
 
 /**
- * Class representing a Block into the Substrate Runtime
+ * @description Class representing a Block into the Substrate Runtime
  */
 export class Block implements IBlock{
 
@@ -47,7 +47,7 @@ export class Block implements IBlock{
     }
 
     /**
-    * SCALE Encodes the Block into u8[]
+    * @description SCALE Encodes the Block into u8[]
     */
     toU8a(): u8[] {
         let encoded = this.header.toU8a();
@@ -65,19 +65,22 @@ export class Block implements IBlock{
     }
 
     /**
-     * Get header
+     * @description Get header
      */
     getHeader(): IHeader{
         return this.header;
     }
 
     /**
-     * Get array of extrinsics
+     * @description Get array of extrinsics
      */
     getExtrinsics(): IExtrinsic[]{
         return this.body;
     }
 
+    /**
+     * @description Returns encoded byte length of the instance
+     */
     encodedLength(): i32{
         let len = this.header.encodedLength();
         for(let i: i32 = 0; i< this.body.length; i++){
@@ -102,7 +105,7 @@ export class Block implements IBlock{
         this.body = extrinsics;
     }
     /**
-     * Instanciates new Block object from SCALE encoded byte array
+     * @description Instanciates new Block object from SCALE encoded byte array
      * @param input - SCALE encoded Block
      */
     static fromU8Array(input: u8[]): DecodedData<IBlock> {
@@ -120,6 +123,11 @@ export class Block implements IBlock{
         return new DecodedData(block, input);
     }
 
+    /**
+     * @description Overloaded == operator
+     * @param a 
+     * @param b 
+     */
     @inline @operator('==')
     static eq(a: Block, b: Block): bool {
         return a.header == b.header && Utils.areArraysEqual(a.body, b.body);

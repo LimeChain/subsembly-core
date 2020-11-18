@@ -1,8 +1,8 @@
-import { Other, Consensus, ChangeTrieRoot, Seal, PreRuntime } from ".";
+import { ChangeTrieRoot, Consensus, Other, PreRuntime, Seal } from ".";
 import { DecodedData } from "..";
 
 /**
- * Types of the digest items
+ * @description Types of the digest items
  */
 export enum DigestItemType {
     
@@ -40,7 +40,7 @@ export enum DigestItemType {
 }
 
 /**
- * Abstract class representing the different digest items in Substrate Runtime
+ * @description Abstract class representing the different digest items in Substrate Runtime
  */
 export abstract class DigestItem{
 
@@ -54,7 +54,7 @@ export abstract class DigestItem{
     }
 
     /**
-     * Instanciates DigestItem from SCALE Encoded Bytes
+     * @description Instanciates DigestItem from SCALE Encoded Bytes
      */
     static fromU8Array(input: u8[]): DecodedData<DigestItem> {
         assert(input.length >= 0, "DigestItem: Invalid input provided. EOF");
@@ -84,7 +84,7 @@ export abstract class DigestItem{
         }
     }
     /**
-     * Get Type Id of the digest item
+     * @description Get Type Id of the digest item
      */
     getTypeId(): u64{
         return this.typeId;
@@ -95,11 +95,21 @@ export abstract class DigestItem{
     abstract toU8a(): u8[];
     abstract equals(other:DigestItem): bool;
     
+    /**
+     * @description Overloaded == operator
+     * @param a 
+     * @param b 
+     */
     @inline @operator('==')
     static eq(a: DigestItem, b: DigestItem): bool {
         return a.typeId === b.typeId && a.equals(b);
     }
 
+    /**
+     * @description Overloaded != operator
+     * @param a 
+     * @param b 
+     */
     @inline @operator('!=')
     static notEq(a: DigestItem, b: DigestItem): bool {
         return !DigestItem.eq(a, b);

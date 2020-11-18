@@ -1,10 +1,10 @@
 import { BytesReader } from "as-scale-codec";
-import { DecodedData } from "."
+import { DecodedData } from ".";
 import { Utils } from "../utils";
 import { IAccountId } from "./interfaces";
 
 /**
- * Thin wrapper of SCALE Hash that represents Account ID (SS58)
+ * @description Thin wrapper of SCALE Hash that represents Account ID (SS58)
  */
 export class AccountId implements IAccountId {
 
@@ -25,22 +25,26 @@ export class AccountId implements IAccountId {
     }
 
     /**
-     * Returns the Bytes that represent the address 
+     * @description Returns the Bytes that represent the address 
      */
     getAddress(): u8[] {
         return this.address;
     }
 
     /**
-     * Returns the number of bytes used for encoding AccountId
+     * @description Returns the number of bytes used for encoding AccountId
      */
     encodedLength(): i32 {
         return this.address.length;
     }
 
+    /**
+     * @description Converts instance to SCALE encoded bytes
+     */
     toU8a(): u8[]{
         return this.address;
     }
+
     /**
      * @description Non static constructor from bytes
      * @param bytes SCALE encoded bytes
@@ -62,11 +66,21 @@ export class AccountId implements IAccountId {
         return new DecodedData<AccountId>(accId, bytesReader.getLeftoverBytes());
     }
 
+    /**
+     * @description Overloaded == operator
+     * @param a 
+     * @param b 
+     */
     @inline @operator('==')
     static eq(a: AccountId, b: AccountId): bool {
         return Utils.areArraysEqual(a.getAddress(), b.getAddress());
     }
 
+    /**
+     * @description Overloaded != operator
+     * @param a 
+     * @param b 
+     */
     @inline @operator('!=')
     static notEq(a: AccountId, b: AccountId): bool {
         return !Utils.areArraysEqual(a.getAddress(), b.getAddress());

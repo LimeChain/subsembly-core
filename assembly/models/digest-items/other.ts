@@ -1,9 +1,9 @@
+import { ByteArray, BytesReader } from "as-scale-codec";
 import { DigestItem, DigestItemType } from ".";
 import { DecodedData } from "..";
-import { ByteArray, BytesReader } from "as-scale-codec";
 
 /**
- * Class representing Other Digest Item into the Substrate Runtime
+ * @description Class representing Other Digest Item into the Substrate Runtime
  */
 export class Other extends DigestItem {
 
@@ -25,7 +25,7 @@ export class Other extends DigestItem {
         this.value = BytesReader.decodeInto<ByteArray>(bytes.slice(index));
     }
     /**
-     * Instanciates Other DigestItem from SCALE Encoded Bytes
+     * @description Instanciates Other DigestItem from SCALE Encoded Bytes
      */
     static fromU8Array(input: u8[]): DecodedData<DigestItem> {
         const value = ByteArray.fromU8a(input);
@@ -33,11 +33,14 @@ export class Other extends DigestItem {
         return new DecodedData<DigestItem>(new Other(value), input);
     }
 
+    /**
+     * @description Encoded byte length of the instance
+     */
     encodedLength(): i32{
         return this.value.encodedLength() + 1;
     }
     /**
-     * SCALE Encodes the Other DigestItem into u8[]
+     * @description SCALE Encodes the Other DigestItem into u8[]
      */
     toU8a(): u8[] {
         let encoded: u8[] = [<u8>DigestItemType.Other];
@@ -45,7 +48,7 @@ export class Other extends DigestItem {
     }
 
     /**
-     * Checks whether the value passed is equal to this instance
+     * @description Checks whether the value passed is equal to this instance
      * @param other 
      */
     equals(other: Other): bool {

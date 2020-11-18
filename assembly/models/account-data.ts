@@ -1,10 +1,10 @@
-import { BytesReader, Codec, UInt128 } from "as-scale-codec";
-import { DecodedData } from ".";
+import { BytesReader, UInt128 } from "as-scale-codec";
+import { DecodedData, IAccountData } from ".";
 
 /**
- * Class representing balance information for a given account 
+ * @description Class representing balance information for a given account 
  */
-export class AccountData implements Codec {
+export class AccountData implements IAccountData {
 
     /**
      * Non-reserved part of the balance. It is the total pool what may in principle be transferred and reserved.
@@ -22,7 +22,7 @@ export class AccountData implements Codec {
     }
 
     /**
-    * SCALE Encodes the AccountData into u8[]
+    * @description SCALE Encodes the AccountData into u8[]
     */
     toU8a(): u8[] {
         return this.free.toU8a()
@@ -30,7 +30,7 @@ export class AccountData implements Codec {
     }
 
     /**
-     * Sets new free value
+     * @description Sets new free value
      * @param newFree 
      */
     setFree(newFree: UInt128): void {
@@ -38,7 +38,7 @@ export class AccountData implements Codec {
     }
 
     /**
-     * Sets new reserved value
+     * @description Sets new reserved value
      * @param newReserved
      */
     setReserved(newReserved: UInt128): void {
@@ -46,14 +46,14 @@ export class AccountData implements Codec {
     }
 
     /**
-     * Returns the free value
+     * @description Returns the free value
      */
     getFree(): UInt128 {
         return this.free;
     }
 
     /**
-     * Returns the reserved value
+     * @description Returns the reserved value
      */
     getReserved(): UInt128 {
         return this.reserved;
@@ -70,19 +70,22 @@ export class AccountData implements Codec {
         this.setReserved(bytesReader.readInto<UInt128>());
     }
 
+    /**
+     * @description Returns encoded byte length
+     */
     encodedLength(): i32 {
         return this.free.encodedLength() + this.reserved.encodedLength();
     }
 
     /**
-     * Instanciates new Default AccountData object
+     * @description Instanciates new Default AccountData object
      */
     static getDefault(): AccountData {
         return new AccountData(UInt128.Zero, UInt128.Zero);
     }
 
     /**
-     * Instanciates new AccountData object from SCALE encoded byte array
+     * @description Instanciates new AccountData object from SCALE encoded byte array
      * @param input - SCALE encoded AccountData
      * TODO - avoid slicing the aray for better performance
      */
@@ -96,11 +99,20 @@ export class AccountData implements Codec {
         return new DecodedData<AccountData>(result, bytesReader.getLeftoverBytes());
     }
 
+    /**
+     * @description Overloaded == operator
+     * @param a 
+     * @param b 
+     */
     @inline @operator('==')
     static eq(a: AccountData, b: AccountData): bool {
         return a.free == b.free && a.reserved == b.reserved;
     }
-
+    /**
+     * @description Overloaded != operator
+     * @param a 
+     * @param b 
+     */
     @inline @operator('!=')
     static notEq(a: AccountData, b: AccountData): bool {
         return !AccountData.eq(a, b);

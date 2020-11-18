@@ -1,9 +1,11 @@
-import { CompactInt, UInt64, BIT_LENGTH, Codec, BytesReader, Byte } from 'as-scale-codec';
-import { DecodedData } from '../decoded-data';
-import { Extrinsic, ExtrinsicType } from './extrinsic';
+import { Byte, BytesReader, Codec, CompactInt, UInt64 } from 'as-scale-codec';
 import { Utils } from "../../utils";
 import { IExtrinsic, IInherent } from '../interfaces';
+import { Extrinsic, ExtrinsicType } from './extrinsic';
 
+/**
+ * @description Class representing Inherent type into Substrate
+ */
 export class Inherent extends Extrinsic implements IInherent{
     /**
      * Of inherent
@@ -31,32 +33,50 @@ export class Inherent extends Extrinsic implements IInherent{
     }
 
     /**
-     * Get type id of the Extrinsic
+     * @description Get type id of the Extrinsic
      */
     getTypeId(): i32{
         return <i32>this.typeId;
     }
 
+    /**
+     * @description Get argument of inherent
+     */
     getArgument(): Codec{
         return this.arg;
     }
 
+    /**
+     * @description Get api version
+     */
     getVersion(): u8{
         return this.version;
     }
 
+    /**
+     * @description Get module prefix
+     */
     getPrefix(): u8{
         return this.prefix;
     }
 
+    /**
+     * @description Get call index 
+     */
     getCallIndex(): u8[]{
         return this.callIndex;
     }
 
+    /**
+     * @description Encoded byte length of the instance
+     */
     encodedLength(): i32{
         return this.toU8a().length;
     }
 
+    /**
+     * @description Converts to SCALE encoded bytes
+     */
     toU8a(): u8[]{
         let len = new CompactInt(ExtrinsicType.Inherent);
         let result = len.toU8a();
@@ -82,18 +102,22 @@ export class Inherent extends Extrinsic implements IInherent{
         this.arg = bytesReader.readInto<UInt64>();
     }
     /**
-     * Convert SCALE encoded bytes to an instance of Inherent
+     * @description Convert SCALE encoded bytes to an instance of Inherent
      */
-    static fromU8Array(input: u8[]): DecodedData<IExtrinsic>{
+    static fromU8Array(input: u8[]): IExtrinsic{
         const bytesReader = new BytesReader(input);
         const version = bytesReader.readInto<Byte>().value;
         const callIndex = bytesReader.readBytes(2);
         const prefix = bytesReader.readInto<Byte>().value;
         const arg = bytesReader.readInto<UInt64>();
-        const inherent = new Inherent(callIndex, version, prefix, arg);
-        return new DecodedData(inherent, input);
+        return new Inherent(callIndex, version, prefix, arg);
     }
 
+    /**
+     * @description Overloaded == operator
+     * @param a 
+     * @param b 
+     */
     @inline @operator('==')
     static eq(a: Inherent, b: Inherent): bool{
         return Utils.areArraysEqual(a.callIndex, b.callIndex) &&
@@ -102,6 +126,11 @@ export class Inherent extends Extrinsic implements IInherent{
             a.arg == b.arg;
     }
 
+    /**
+     * @description Overloaded != operator
+     * @param a 
+     * @param b 
+     */
     @inline @operator('!=')
     static notEq(a: Inherent, b: Inherent): bool{
         return !Inherent.eq(a, b);

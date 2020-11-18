@@ -1,12 +1,13 @@
-import { CompactInt, Bytes, ByteArray, BytesReader } from 'as-scale-codec';
-import { DecodedData } from './decoded-data';
+import { ByteArray, Bytes, BytesReader, CompactInt } from 'as-scale-codec';
 import { Utils } from "../utils";
-import { IInhrenetData } from './interfaces';
+import { DecodedData } from './decoded-data';
+import { IInherentData } from './interfaces';
+
 /**
- * Class representing InherentData transactions in Substrate runtime
+ * @description Class representing InherentData transactions in Substrate runtime
  */
 
-export class InherentData implements IInhrenetData {
+export class InherentData implements IInherentData {
     
     /**
     * Length of the InherentIdentifier in InherentData
@@ -28,13 +29,13 @@ export class InherentData implements IInhrenetData {
     } 
 
     /**
-     * Get data
+     * @description Get data
      */
     getData(): Map<string, ByteArray>{
         return this.data;
     }
     /**
-     * Encoded length of the instance
+     * @description Encoded byte length of the instance
      */
     encodedLength(): i32{
         let keyLength: i32 = this.data.keys().length * InherentData.INHERENT_IDENTIFIER_LENGTH;
@@ -45,7 +46,7 @@ export class InherentData implements IInhrenetData {
         return keyLength + valueLength;
     }
     /**
-     * SCALE Encodes the InherentData into u8[]
+     * @description SCALE Encodes the InherentData into u8[]
      */
     toU8a(): u8[] {
         let result: u8[] = [];
@@ -79,21 +80,19 @@ export class InherentData implements IInhrenetData {
         }
     }
     /**
-     * Creates a new instance of InherentData class from SCALE encoded array of bytes
+     * @description Creates a new instance of InherentData class from SCALE encoded array of bytes
      * @param input Takes SCALE encoded array of bytes as an argument
      */
-    static fromU8Array(input: u8[]): DecodedData<InherentData> {
+    static fromU8Array(input: u8[], index: i32 = 0): DecodedData<InherentData> {
         const data: Map<string, ByteArray> = new Map<string, ByteArray>();
-        const lenComp = Bytes.decodeCompactInt(input);
-        input = input.slice(lenComp.decBytes);
+        const bytesReader = new BytesReader(input.slice(index));
+        const lenComp = bytesReader.readInto<CompactInt>();
 
         for (let i: i32 = 0; i<lenComp.value; i++){
             const buff = new Uint8Array(InherentData.INHERENT_IDENTIFIER_LENGTH);
-            Bytes.copyToTyped(input.slice(0, InherentData.INHERENT_IDENTIFIER_LENGTH), buff);
+            Bytes.copyToTyped(bytesReader.readBytes(InherentData.INHERENT_IDENTIFIER_LENGTH), buff);
             let key: string =  String.UTF8.decode(buff.buffer);
-            input = input.slice(InherentData.INHERENT_IDENTIFIER_LENGTH);
-            let value: ByteArray = ByteArray.fromU8a(input);
-            input = input.slice(value.encodedLength());
+            let value: ByteArray = bytesReader.readInto<ByteArray>();
             data.set(key, value);
         }
         const inherentData = new InherentData(data);
@@ -101,7 +100,7 @@ export class InherentData implements IInhrenetData {
     }
 
     /**
-     * Overloaded equals operator
+     * @description Overloaded equals operator
      * @param a instance of InherentData
      * @param b Instance of InherentData
      */

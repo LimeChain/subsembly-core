@@ -1,9 +1,9 @@
-import { DigestItem, DigestItemType, BaseConsensusItem } from ".";
-import { DecodedData } from "..";
 import { ByteArray, BytesReader } from "as-scale-codec";
+import { BaseConsensusItem, DigestItem, DigestItemType } from ".";
+import { DecodedData } from "..";
 
 /**
- * Class representing PreRuntime Digest Item into the Substrate Runtime
+ * @description Class representing PreRuntime Digest Item into the Substrate Runtime
  */
 export class PreRuntime extends BaseConsensusItem {
 
@@ -22,7 +22,7 @@ export class PreRuntime extends BaseConsensusItem {
     }
 
     /**
-     * Instanciates PreRuntime DigestItem from SCALE Encoded Bytes
+     * @description Instanciates PreRuntime DigestItem from SCALE Encoded Bytes
      */
     static fromU8Array(input: u8[]): DecodedData<DigestItem> {
         assert(input.length > BaseConsensusItem.CONSENSUS_ENGINE_ID_LENGTH, "PreRuntime Digest Item: Input bytes are invalid. EOF");
@@ -37,7 +37,7 @@ export class PreRuntime extends BaseConsensusItem {
     }
 
     /**
-     * SCALE Encodes the PreRuntime DigestItem into u8[]
+     * @description SCALE Encodes the PreRuntime DigestItem into u8[]
      */
     toU8a(): u8[] {
         let encoded: u8[] = [<u8>DigestItemType.PreRuntime];

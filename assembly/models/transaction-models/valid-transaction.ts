@@ -1,6 +1,9 @@
-import { UInt64, Bool, CompactInt } from 'as-scale-codec';
+import { Bool, CompactInt, UInt64 } from 'as-scale-codec';
 import { TransactionTag } from './transaction-tag';
 
+/**
+ * @description Class representing ValidTransaction into Substrate runtime
+ */
 export class ValidTransaction{
     /**
      * Priority determines the ordering of two transactions that have all
@@ -39,6 +42,9 @@ export class ValidTransaction{
             this.propogate = propogate;
     }
 
+    /**
+     * @description Converts to SCALE encoded bytes
+     */
     toU8a(): u8[]{
         // indicates that the Result<ValidTransaction, TransactionError> is ValidTransaction
         const result: u8[] = [0];

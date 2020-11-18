@@ -1,15 +1,19 @@
-import { Serialiser } from "../utils";
+import { Bool, ByteArray, Int32 } from 'as-scale-codec';
 import { Option } from "../models";
-import { ext_storage_set_version_1, ext_storage_get_version_1, ext_storage_read_version_1, ext_storage_clear_version_1, ext_storage_exists_version_1, ext_storage_root_version_1, ext_storage_changes_root_version_1 } from './env';
-import { Int32, Bool, ByteArray } from 'as-scale-codec';
+import { Serialiser } from "../utils";
+import {
+    ext_storage_changes_root_version_1, ext_storage_clear_version_1,
+    ext_storage_exists_version_1, ext_storage_get_version_1, ext_storage_read_version_1,
+    ext_storage_root_version_1, ext_storage_set_version_1
+} from './env';
 
 /**
- * Namespace exporting Storage related functions
+ * @description Namespace exporting Storage related functions
  */
 export namespace Storage {
 
     /**
-     * Returns the value of the passed key
+     * @description Returns the value of the passed key
      * @param key key to access the storage
      */
     export function get(key: u8[]): Option<ByteArray> {
@@ -26,7 +30,7 @@ export namespace Storage {
     }
     
     /**
-     * Sets the value in storage for a given key
+     * @description Sets the value in storage for a given key
      * @param key key pair
      * @param value value of the pair
      */
@@ -36,7 +40,7 @@ export namespace Storage {
         ext_storage_set_version_1(key64, value64);
     }
     /**
-     * Gets the given key from storage, placing the value into a buffer and returning the number of bytes that the
+     * @description Gets the given key from storage, placing the value into a buffer and returning the number of bytes that the
      * entry in storage has beyond the offset.
      * @param key key of the data to get
      * @param offset offset beyond which the value is copied
@@ -57,7 +61,7 @@ export namespace Storage {
         }
     }
     /**
-     * Clears the storage of the given key and its value.
+     * @description Clears the storage of the given key and its value.
      * @param key key of the data to clear
      */
     export function clear(key: u8[]): void {
@@ -65,7 +69,7 @@ export namespace Storage {
         ext_storage_clear_version_1(key64);
     }
     /**
-     * Take a value from storage, removing it afterwards.
+     * @description Take a value from storage, removing it afterwards.
      * @param key 
      */
     export function take(key: u8[]): u8[]{
@@ -74,7 +78,7 @@ export namespace Storage {
         return value.isSome() ? (<ByteArray>value.unwrap()).values : [];
     }
     /**
-     * Checks whether the given key exists in storage.
+     * @description Checks whether the given key exists in storage.
      * @param key key of the data to check
      */
     export function exists(key: u8[]): Bool {
@@ -83,7 +87,7 @@ export namespace Storage {
         return new Bool(itExists as bool);
     }
     /**
-     * Commits all existing operations and computes the resulting storage root.
+     * @description Commits all existing operations and computes the resulting storage root.
      */
     export function storageRoot(): u8[] {
         const root = ext_storage_root_version_1();
@@ -92,7 +96,7 @@ export namespace Storage {
         return rootU8;
     }
     /**
-     * Commits all existing operations and gets the resulting change root. The parent hash is a SCALE encoded change
+     * @description Commits all existing operations and gets the resulting change root. The parent hash is a SCALE encoded change
         root.
      * @param parentHash 
      */

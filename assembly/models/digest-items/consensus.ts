@@ -1,9 +1,9 @@
-import { DigestItem, DigestItemType, BaseConsensusItem } from ".";
-import { DecodedData } from '..';
 import { ByteArray, BytesReader } from "as-scale-codec";
+import { BaseConsensusItem, DigestItem, DigestItemType } from ".";
+import { DecodedData } from '..';
 
 /**
- * Class representing Consensus Digest Item into the Substrate Runtime
+ * @description Class representing Consensus Digest Item into the Substrate Runtime
  */
 export class Consensus extends BaseConsensusItem {
    
@@ -23,7 +23,7 @@ export class Consensus extends BaseConsensusItem {
     }
     
     /**
-     * Instanciates Consensus DigestItem from SCALE Encoded Bytes
+     * @description Instanciates Consensus DigestItem from SCALE Encoded Bytes
      */
     static fromU8Array(input: u8[]): DecodedData<DigestItem> {
         assert(input.length > BaseConsensusItem.CONSENSUS_ENGINE_ID_LENGTH, "Consensus Digest Item: Input bytes are invalid. EOF");
@@ -38,7 +38,7 @@ export class Consensus extends BaseConsensusItem {
     }
 
     /**
-     * SCALE Encodes the Consensus DigestItem into u8[]
+     * @description SCALE Encodes the Consensus DigestItem into u8[]
      */
     toU8a(): u8[] {
         let encoded: u8[] = [<u8>DigestItemType.Consensus];

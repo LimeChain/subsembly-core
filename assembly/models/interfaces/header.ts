@@ -2,7 +2,7 @@ import { Codec } from 'as-scale-codec';
 import { DigestItem } from '../digest-items';
 
 /**
- * Header interface
+ * @description Header interface
  */
 export interface IHeader extends Codec{
     /**

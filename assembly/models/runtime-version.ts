@@ -3,7 +3,7 @@ import { SupportedAPIs } from ".";
 
 
 /**
- * Version module for the Substrate runtime
+ * @description Version module for the Substrate runtime
  */
 export class RuntimeVersion {
 
@@ -63,7 +63,7 @@ export class RuntimeVersion {
     }
 
     /**
-     * SCALE Encodes the RuntimeVersion into u8[]
+     * @description SCALE Encodes the RuntimeVersion into u8[]
      */
     toU8a(): u8[] {
         return this.specName.toU8a()

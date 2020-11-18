@@ -1,10 +1,13 @@
-import { UInt32, CompactInt } from "as-scale-codec";
+import { CompactInt, UInt32 } from "as-scale-codec";
 
 /**
- * Vector of pairs of ApiId and u32 for version
+ * @description Vector of pairs of ApiId and u32 for version
  */
 export class SupportedAPIs {
-
+    
+    /**
+     * Vector of pairs of ApiId
+     */
     private apis: Map<u8[], UInt32>
 
     constructor() {
@@ -12,7 +15,7 @@ export class SupportedAPIs {
     }
 
     /**
-     * Adds new API in the supported APIs Vector
+     * @description Adds new API in the supported APIs Vector
      * @param apiId - the ID of the API
      * @param version - the version of the supported API
      */
@@ -21,7 +24,7 @@ export class SupportedAPIs {
     }
 
     /**
-     * SCALE Encodes the SupportedAPIs into u8[]
+     * @description SCALE Encodes the SupportedAPIs into u8[]
      */
     toU8a(): u8[] {
         

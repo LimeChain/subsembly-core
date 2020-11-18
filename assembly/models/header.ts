@@ -1,11 +1,11 @@
-import { Hash, CompactInt, BytesReader } from "as-scale-codec";
+import { BytesReader, CompactInt, Hash } from "as-scale-codec";
+import { DecodedData, DigestItem, Option } from ".";
 import { Utils } from "../utils";
-import { Option, DecodedData, DigestItem } from ".";
 import { Constants } from "./constants";
 import { IHeader } from "./interfaces/header";
 
 /**
- * Class representing a Block Header into the Substrate Runtime
+ * @description Class representing a Block Header into the Substrate Runtime
  */
 export class Header implements IHeader{
 
@@ -47,32 +47,40 @@ export class Header implements IHeader{
     }
 
     /**
-     * Get block number
+     * @description Get block number
      */
     getNumber(): CompactInt{
         return this.number;
     }
+
     /**
-     * Get extriniscsRoot
+     * @description Get extriniscsRoot
      */
     getExtrinsicsRoot(): Hash{
         return this.extrinsicsRoot;
     }
+    
     /**
-     * Get parentHash
+     * @description Get parentHash
      */
     getParentHash(): Hash{
         return this.parentHash;
     }
+    
     /**
-     * Get stateRoot
+     * @description Get stateRoot
      */
     getStateRoot(): Hash{
         return this.stateRoot;
     }
+    
+    /**
+     * @description Get list of digests
+     */
     getDigests(): DigestItem[]{
         return <DigestItem[]>this.digests.unwrap();
     }
+    
     /**
      * @description Encoded length of the header
      */
@@ -81,6 +89,7 @@ export class Header implements IHeader{
             + 0 + this.extrinsicsRoot.encodedLength()
             + this.number.encodedLength();
     }
+
     /**
      * @description Non static constructor from bytes
      * @param bytes SCALE encoded bytes
@@ -96,7 +105,7 @@ export class Header implements IHeader{
     }
 
     /**
-    * SCALE Encodes the Header into u8[]
+    * @description SCALE Encodes the Header into u8[]
     */
     toU8a(): u8[] {
         let digest:u8[] = [];
@@ -120,7 +129,7 @@ export class Header implements IHeader{
     }
 
     /**
-     * Instanciates new Header object from SCALE encoded byte array
+     * @description Instanciates new Header object from SCALE encoded byte array
      * @param input - SCALE encoded Header
      * TODO - avoid slicing the aray for better performance
      */
@@ -139,7 +148,7 @@ export class Header implements IHeader{
     }
 
     /**
-     * Decodes the byte array into Optional Hash and slices it depending on the decoding
+     * @description Decodes the byte array into Optional Hash and slices it depending on the decoding
      * TODO - move this function to a proper place
      * @param input - SCALE Encded byte array
      */
@@ -161,6 +170,11 @@ export class Header implements IHeader{
         return new DecodedData<Option<DigestItem[]>>(digestOption, input);
     }
 
+    /**
+     * Overloaded == operator
+     * @param a 
+     * @param b 
+     */
     @inline @operator('==')
     static eq(a: Header, b: Header): bool {
         let areEqual = a.parentHash == b.parentHash
@@ -177,6 +191,11 @@ export class Header implements IHeader{
         }
     }
 
+    /**
+     * Overloaded != operator
+     * @param a 
+     * @param b 
+     */
     @inline @operator('!=')
     static notEq(a: Header, b: Header): bool {
         return !Header.eq(a, b);

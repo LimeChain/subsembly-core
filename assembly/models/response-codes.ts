@@ -1,5 +1,5 @@
 /**
- * Class contains all well-known errors that may result from apply_extrinsic method
+ * @description Class contains all well-known errors that may result from apply_extrinsic method
  */
 export class ResponseCodes{
     /**
@@ -47,7 +47,7 @@ export class ResponseCodes{
 
 
     /**
-     * Returns a dispatch error message
+     * @description Returns a dispatch error message
      * @param moduleIndex 
      * @param errorValue specific error value
      */

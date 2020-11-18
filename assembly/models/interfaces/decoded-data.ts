@@ -1,3 +1,7 @@
+/**
+ * @description Interface for DecodedData
+ */
+
 export interface IDecodedData<T>{
     /**
      * @description Get Result of the decoding

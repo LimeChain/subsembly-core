@@ -1,6 +1,7 @@
 
 /**
- * Class used to return the result of decoding an object, together with a sliced array of bytes that are left for decoding
+ * @description Class used to return the result of decoding an object, 
+ * together with a sliced array of bytes that are left for decoding
  */
 export class DecodedData<T> {
 
@@ -13,10 +14,16 @@ export class DecodedData<T> {
      */
     public input: u8[];
 
+    /**
+     * @description Get result of the instance
+     */
     getResult(): T {
         return this.result;
     }
 
+    /**
+     * @description Get leftover bytes of the instance
+     */
     getInput(): u8[]{
         return this.input;
     }
