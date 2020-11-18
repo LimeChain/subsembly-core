@@ -108,8 +108,8 @@ export class Block implements IBlock{
      * @description Instanciates new Block object from SCALE encoded byte array
      * @param input - SCALE encoded Block
      */
-    static fromU8Array(input: u8[]): DecodedData<IBlock> {
-        const bytesReader = new BytesReader(input);
+    static fromU8Array(input: u8[], index: i32 = 0): DecodedData<IBlock> {
+        const bytesReader = new BytesReader(input.slice(index));
         const header: IHeader = bytesReader.readInto<Header>();
 
         const extrinsicsLength = bytesReader.readInto<CompactInt>();

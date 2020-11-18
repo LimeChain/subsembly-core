@@ -151,7 +151,7 @@ export class SignedTransaction extends Extrinsic implements ISignedTransaction{
      * TODO - avoid slicing the aray for better performance
      */
     static fromU8Array(input: u8[], index: i32 = 0): IExtrinsic {
-        assert(input.length >= 144, "Extrinsic: Invalid bytes provided. EOF");
+        assert(input.length - index >= 144, "Extrinsic: Invalid bytes provided. EOF");
 
         const bytesReader = new BytesReader(input.slice(index));
 

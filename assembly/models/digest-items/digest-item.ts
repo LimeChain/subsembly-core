@@ -56,27 +56,27 @@ export abstract class DigestItem{
     /**
      * @description Instanciates DigestItem from SCALE Encoded Bytes
      */
-    static fromU8Array(input: u8[]): DecodedData<DigestItem> {
-        assert(input.length >= 0, "DigestItem: Invalid input provided. EOF");
+    static fromU8Array(input: u8[], index: i32 = 0): DecodedData<DigestItem> {
+        assert(input.length - index >= 0, "DigestItem: Invalid input provided. EOF");
 
-        const type = <i32>input[0];
-        input = input.slice(1);
+        const type = <i32>input[index];
+        input = input.slice(index+1);
 
         switch (type) {
             case DigestItemType.Other: {
-                return Other.fromU8Array(input);
+                return Other.fromU8Array(input, index);
             }
             case DigestItemType.ChangeTrieRoot: {
-                return ChangeTrieRoot.fromU8Array(input);
+                return ChangeTrieRoot.fromU8Array(input, index);
             }
             case DigestItemType.Consensus: {
-                return Consensus.fromU8Array(input);
+                return Consensus.fromU8Array(input, index);
             }
             case DigestItemType.Seal: {
-                return Seal.fromU8Array(input);
+                return Seal.fromU8Array(input, index);
             }
             case DigestItemType.PreRuntime: {
-                return PreRuntime.fromU8Array(input);
+                return PreRuntime.fromU8Array(input, index);
             }
             default: {
                 throw new Error("DigestItem: Unsupported DigestItem type: " + type.toString());

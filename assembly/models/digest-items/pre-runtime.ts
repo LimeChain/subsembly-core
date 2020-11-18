@@ -24,16 +24,14 @@ export class PreRuntime extends BaseConsensusItem {
     /**
      * @description Instanciates PreRuntime DigestItem from SCALE Encoded Bytes
      */
-    static fromU8Array(input: u8[]): DecodedData<DigestItem> {
+    static fromU8Array(input: u8[], index: i32 = 0): DecodedData<DigestItem> {
         assert(input.length > BaseConsensusItem.CONSENSUS_ENGINE_ID_LENGTH, "PreRuntime Digest Item: Input bytes are invalid. EOF");
+        const bytesReader = new BytesReader(input.slice(index));
+        const consensusEngineId = bytesReader.readBytes(BaseConsensusItem.CONSENSUS_ENGINE_ID_LENGTH);
 
-        const consensusEngineId = input.slice(0, BaseConsensusItem.CONSENSUS_ENGINE_ID_LENGTH);
-        input = input.slice(BaseConsensusItem.CONSENSUS_ENGINE_ID_LENGTH);
+        const value = bytesReader.readInto<ByteArray>();
 
-        const value = ByteArray.fromU8a(input);
-        input = input.slice(value.encodedLength());
-
-        return new DecodedData<DigestItem>(new PreRuntime(consensusEngineId, value), input);
+        return new DecodedData<DigestItem>(new PreRuntime(consensusEngineId, value), bytesReader.getLeftoverBytes());
     }
 
     /**

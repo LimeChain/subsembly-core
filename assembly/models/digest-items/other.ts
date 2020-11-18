@@ -27,10 +27,10 @@ export class Other extends DigestItem {
     /**
      * @description Instanciates Other DigestItem from SCALE Encoded Bytes
      */
-    static fromU8Array(input: u8[]): DecodedData<DigestItem> {
-        const value = ByteArray.fromU8a(input);
-        input = input.slice(value.encodedLength());
-        return new DecodedData<DigestItem>(new Other(value), input);
+    static fromU8Array(input: u8[], index: i32 = 0): DecodedData<DigestItem> {
+        const bytesReader = new BytesReader(input.slice(index));
+        const value = bytesReader.readInto<ByteArray>();
+        return new DecodedData<DigestItem>(new Other(value), bytesReader.getLeftoverBytes());
     }
 
     /**

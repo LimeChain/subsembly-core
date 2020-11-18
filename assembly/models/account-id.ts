@@ -60,7 +60,7 @@ export class AccountId implements IAccountId {
      * @param input 
      */
     static fromU8Array(input: u8[], index: i32 = 0): DecodedData<AccountId> {
-        assert(input.length >= AccountId.ADDRESS_LENGTH, "AccountId: Invalid bytes length provided. EOF");
+        assert(input.length - index >= AccountId.ADDRESS_LENGTH, "AccountId: Invalid bytes length provided. EOF");
         const bytesReader = new BytesReader(input.slice(index));
         const accId = new AccountId(bytesReader.readBytes(AccountId.ADDRESS_LENGTH));
         return new DecodedData<AccountId>(accId, bytesReader.getLeftoverBytes());

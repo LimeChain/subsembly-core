@@ -25,16 +25,14 @@ export class Consensus extends BaseConsensusItem {
     /**
      * @description Instanciates Consensus DigestItem from SCALE Encoded Bytes
      */
-    static fromU8Array(input: u8[]): DecodedData<DigestItem> {
-        assert(input.length > BaseConsensusItem.CONSENSUS_ENGINE_ID_LENGTH, "Consensus Digest Item: Input bytes are invalid. EOF");
+    static fromU8Array(input: u8[], index: i32 = 0): DecodedData<DigestItem> {
+        assert(input.length - index > BaseConsensusItem.CONSENSUS_ENGINE_ID_LENGTH, "Consensus Digest Item: Input bytes are invalid. EOF");
 
-        const consensusEngineId = input.slice(0, BaseConsensusItem.CONSENSUS_ENGINE_ID_LENGTH);
-        input = input.slice(BaseConsensusItem.CONSENSUS_ENGINE_ID_LENGTH);
-
-        const value = ByteArray.fromU8a(input);
-        input = input.slice(value.encodedLength());
-
-        return new DecodedData<DigestItem>(new Consensus(consensusEngineId, value), input);
+        const bytesReader = new BytesReader(input.slice(index));
+        const consensusEngineId = bytesReader.readBytes(BaseConsensusItem.CONSENSUS_ENGINE_ID_LENGTH);
+        const value = bytesReader.readInto<ByteArray>();
+        
+        return new DecodedData<DigestItem>(new Consensus(consensusEngineId, value), bytesReader.getLeftoverBytes());
     }
 
     /**

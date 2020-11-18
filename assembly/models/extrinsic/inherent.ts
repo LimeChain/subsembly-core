@@ -104,8 +104,8 @@ export class Inherent extends Extrinsic implements IInherent{
     /**
      * @description Convert SCALE encoded bytes to an instance of Inherent
      */
-    static fromU8Array(input: u8[]): IExtrinsic{
-        const bytesReader = new BytesReader(input);
+    static fromU8Array(input: u8[], index: i32 = 0): IExtrinsic{
+        const bytesReader = new BytesReader(input.slice(index));
         const version = bytesReader.readInto<Byte>().value;
         const callIndex = bytesReader.readBytes(2);
         const prefix = bytesReader.readInto<Byte>().value;

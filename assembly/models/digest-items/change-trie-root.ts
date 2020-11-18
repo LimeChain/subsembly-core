@@ -29,10 +29,10 @@ export class ChangeTrieRoot extends DigestItem {
     /**
      * @description Instanciates Other DigestItem from SCALE Encoded Bytes
      */
-    static fromU8Array(input: u8[]): DecodedData<DigestItem> {
-        const value = Hash.fromU8a(input);
-        input = input.slice(value.encodedLength());
-        return new DecodedData<DigestItem>(new ChangeTrieRoot(value), input);
+    static fromU8Array(input: u8[], index: i32 = 0): DecodedData<DigestItem> {
+        const bytesReader = new BytesReader(input.slice(index));
+        const value = bytesReader.readInto<Hash>();
+        return new DecodedData<DigestItem>(new ChangeTrieRoot(value), bytesReader.getLeftoverBytes());
     }
 
     /**

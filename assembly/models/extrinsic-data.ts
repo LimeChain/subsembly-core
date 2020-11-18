@@ -16,6 +16,9 @@ export class ExtrinsicData implements IExtrinsicData {
         this.data = data;
     }
 
+    /**
+     * @description Encodes into SCALE bytes
+     */
     toU8a(): u8[]{
         let result: u8[] = [];
         let keys: UInt32[] = this.data.keys();
@@ -86,9 +89,9 @@ export class ExtrinsicData implements IExtrinsicData {
      * @description Initializes ExtrinsicData from bytes
      * @param input SCALE encoded bytes
      */
-    static fromU8Array(input: u8[]): DecodedData<ExtrinsicData>{
+    static fromU8Array(input: u8[], index: i32 = 0): DecodedData<ExtrinsicData>{
         const data: Map<UInt32, ByteArray> = new Map();
-        const lenKeys = Bytes.decodeCompactInt(input);
+        const lenKeys = Bytes.decodeCompactInt(input.slice(index));
         input = input.slice(lenKeys.decBytes);
         for (let i: u64 = 0; i < lenKeys.value; i++){
             const key = UInt32.fromU8a(input.slice(0, BIT_LENGTH.INT_32));
