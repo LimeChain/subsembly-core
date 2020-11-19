@@ -94,7 +94,7 @@ export class ExtrinsicData implements IExtrinsicData {
         const bytesReader = new BytesReader(input.slice(index));
         const lenKeys = bytesReader.readInto<CompactInt>();
         
-        for (let i: u64 = 0; i < lenKeys.value; i++){
+        for (let i: i32 = 0; i < lenKeys.value; i++){
             const key = bytesReader.readInto<UInt32>();
             const value = bytesReader.readInto<ByteArray>();
             data.set(key, value);
@@ -130,7 +130,7 @@ export class ExtrinsicData implements IExtrinsicData {
      * @param a instance of ExtrinsicData
      * @param b Instance of ExtrinsicData
      */
-    @inline @operator('==')
+    @inline @operator('!=')
     static notEq(a: ExtrinsicData, b: ExtrinsicData): bool {
         return !ExtrinsicData.eq(a, b);
     }

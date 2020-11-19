@@ -82,7 +82,7 @@ export class Signature implements ISignature {
      * @param a 
      * @param b 
      */
-    @inline @operator('==')
+    @inline @operator('!=')
     static notEq(a: Signature, b: Signature): bool{
         return !Signature.eq(a, b);
     }

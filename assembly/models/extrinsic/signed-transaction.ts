@@ -171,13 +171,11 @@ export class SignedTransaction extends Extrinsic implements ISignedTransaction{
      */
     @inline @operator('==')
     static eq(a: SignedTransaction, b: SignedTransaction): bool {
-        let equal = 
-            a.from == b.from 
-            && a.to == b.to
-            && a.amount.value == b.amount.value
-            && a.nonce.value == b.nonce.value
-            && a.signature == b.signature;
-        return equal;
+    return a.from == b.from 
+        && a.to == b.to
+        && a.amount.value == b.amount.value
+        && a.nonce.value == b.nonce.value
+        && a.signature == b.signature;
     }
 
     /**
