@@ -1,5 +1,5 @@
 import { CompactInt, UInt64 } from 'as-scale-codec';
-import { AccountId } from "..";
+import { IAccountId } from "..";
 
 /**
  * @description Class representing TransactionTag to Substrate Runtime
@@ -12,13 +12,13 @@ export class TransactionTag{
     /**
      * Scale encoded bytes of the sender's AccountID
      */
-    public sender: AccountId;
+    public sender: IAccountId;
     /**
      * Nonce of the transaction
      */
     public nonce: UInt64;
 
-    constructor(sender: AccountId, nonce: UInt64){
+    constructor(sender: IAccountId, nonce: UInt64){
         this.sender = sender;
         this.nonce = nonce;
     }

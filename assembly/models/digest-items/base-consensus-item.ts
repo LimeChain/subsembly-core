@@ -50,4 +50,12 @@ export abstract class BaseConsensusItem extends DigestItem{
         return Utils.areArraysEqual(this.consensusEngineId, other.consensusEngineId)
             && this.value == other.value;
     }
+
+    /**
+     * @description Checks whether the value passed is not equal to this instance
+     * @param other
+     */
+    notEquals(other: BaseConsensusItem): bool {
+        return !this.equals(other);
+    }
 }

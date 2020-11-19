@@ -57,5 +57,13 @@ export class ChangeTrieRoot extends DigestItem {
         return this.value == other.value;
     }
 
+    /**
+     * @description Checks whether the value passed is not equal to this instance
+     * @param other
+     */
+    notEquals(other: ChangeTrieRoot): bool {
+        return !this.equals(other);
+    }
+
 
 }

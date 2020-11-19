@@ -148,7 +148,6 @@ export class SignedTransaction extends Extrinsic implements ISignedTransaction{
     /**
      * @description Instanciates new Extrinsic object from SCALE encoded byte array
      * @param input - SCALE encoded Extrinsic
-     * TODO - avoid slicing the aray for better performance
      */
     static fromU8Array(input: u8[], index: i32 = 0): IExtrinsic {
         assert(input.length - index >= 144, "Extrinsic: Invalid bytes provided. EOF");

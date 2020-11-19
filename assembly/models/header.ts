@@ -131,7 +131,6 @@ export class Header implements IHeader{
     /**
      * @description Instanciates new Header object from SCALE encoded byte array
      * @param input - SCALE encoded Header
-     * TODO - avoid slicing the aray for better performance
      */
     static fromU8Array(input: u8[], index: i32 = 0): DecodedData<IHeader> {
         const bytesReader = new BytesReader(input.slice(index));

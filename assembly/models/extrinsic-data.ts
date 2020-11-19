@@ -1,4 +1,4 @@
-import { BIT_LENGTH, ByteArray, Bytes, BytesReader, CompactInt, UInt32 } from 'as-scale-codec';
+import { ByteArray, BytesReader, CompactInt, UInt32 } from 'as-scale-codec';
 import { DecodedData } from './decoded-data';
 import { IExtrinsicData } from './interfaces';
 
@@ -91,20 +91,19 @@ export class ExtrinsicData implements IExtrinsicData {
      */
     static fromU8Array(input: u8[], index: i32 = 0): DecodedData<ExtrinsicData>{
         const data: Map<UInt32, ByteArray> = new Map();
-        const lenKeys = Bytes.decodeCompactInt(input.slice(index));
-        input = input.slice(lenKeys.decBytes);
+        const bytesReader = new BytesReader(input.slice(index));
+        const lenKeys = bytesReader.readInto<CompactInt>();
+        
         for (let i: u64 = 0; i < lenKeys.value; i++){
-            const key = UInt32.fromU8a(input.slice(0, BIT_LENGTH.INT_32));
-            input = input.slice(key.encodedLength());
-            const value = ByteArray.fromU8a(input);
-            input = input.slice(value.encodedLength());
+            const key = bytesReader.readInto<UInt32>();
+            const value = bytesReader.readInto<ByteArray>();
             data.set(key, value);
         }
         const extcsData = new ExtrinsicData(data);
         return new DecodedData<ExtrinsicData>(extcsData, input);
     }   
     /**
-     * @description Overloaded equals operator
+     * @description Overloaded == operator
      * @param a instance of ExtrinsicData
      * @param b Instance of ExtrinsicData
      */
@@ -124,5 +123,15 @@ export class ExtrinsicData implements IExtrinsicData {
             }
         }
         return areEqual;
+    }
+
+    /**
+     * @description Overloaded != operator
+     * @param a instance of ExtrinsicData
+     * @param b Instance of ExtrinsicData
+     */
+    @inline @operator('==')
+    static notEq(a: ExtrinsicData, b: ExtrinsicData): bool {
+        return !ExtrinsicData.eq(a, b);
     }
 }

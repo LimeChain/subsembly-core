@@ -132,4 +132,13 @@ export class Block implements IBlock{
     static eq(a: Block, b: Block): bool {
         return a.header == b.header && Utils.areArraysEqual(a.body, b.body);
     }
+    /**
+     * @description Overloaded != operator
+     * @param a 
+     * @param b 
+     */
+    @inline @operator('!=')
+    static notEq(a: Block, b: Block): bool {
+        return !Block.eq(a, b);
+    }
 }

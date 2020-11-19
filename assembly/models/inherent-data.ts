@@ -100,7 +100,7 @@ export class InherentData implements IInherentData {
     }
 
     /**
-     * @description Overloaded equals operator
+     * @description Overloaded == operator
      * @param a instance of InherentData
      * @param b Instance of InherentData
      */
@@ -120,5 +120,15 @@ export class InherentData implements IInherentData {
             }
         }
         return areEqual;
+    }
+
+    /**
+     * @description Overloaded != operator
+     * @param a instance of InherentData
+     * @param b Instance of InherentData
+     */
+    @inline @operator('!=')
+    static notEq(a: InherentData, b: InherentData): bool{
+        return !InherentData.eq(a, b);
     }
 }

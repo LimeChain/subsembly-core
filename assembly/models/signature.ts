@@ -54,6 +54,13 @@ export class Signature implements ISignature {
     }
 
     /**
+     * @description Returns string representation
+     */
+    toString(): string {
+        return this.value.toString();
+    }
+
+    /**
      * @description Overloaded == operator
      * @param a 
      * @param b 
@@ -71,10 +78,12 @@ export class Signature implements ISignature {
     }
 
     /**
-     * @description Returns string representation
+     * @description Overloaded != operator
+     * @param a 
+     * @param b 
      */
-    toString(): string {
-        return this.value.toString();
+    @inline @operator('==')
+    static notEq(a: Signature, b: Signature): bool{
+        return !Signature.eq(a, b);
     }
-
 }

@@ -55,4 +55,12 @@ export class Other extends DigestItem {
         return this.value == other.value;
     }
 
+    /**
+     * @description Checks whether the value passed is not equal to this instance
+     * @param other
+     */
+    notEquals(other: Other): bool {
+        return !this.equals(other);
+    }
+
 }
