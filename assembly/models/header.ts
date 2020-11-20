@@ -37,7 +37,7 @@ export class Header implements IHeader{
         number: CompactInt = new CompactInt(), 
         stateRoot: Hash = new Hash(), 
         extrinsicsRoot: Hash = new Hash(), 
-        digests: Option<DigestItem[]> = new Option([]))
+        digests: Option<DigestItem[]> = new Option())
     {
         this.parentHash = parentHash;
         this.number = number;
@@ -78,9 +78,11 @@ export class Header implements IHeader{
      * @description Get list of digests
      */
     getDigests(): DigestItem[]{
-        return <DigestItem[]>this.digests.unwrap();
-    }
-    
+        if(this.digests.isSome()){
+            return <DigestItem[]>this.digests.unwrap();
+        }
+        return [];
+    }    
     /**
      * @description Encoded length of the header
      */
