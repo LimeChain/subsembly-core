@@ -1,12 +1,11 @@
-import { Byte, BytesReader, Codec, CompactInt, UInt64 } from 'as-scale-codec';
-import { Utils } from "../../utils";
+import { Byte, BytesReader, Codec, CompactInt } from 'as-scale-codec';
 import { IExtrinsic, IInherent } from '../interfaces';
 import { Extrinsic, ExtrinsicType } from './extrinsic';
 
 /**
  * @description Class representing Inherent type into Substrate
  */
-export class Inherent extends Extrinsic implements IInherent{
+export class Inherent<Arg extends Codec> extends Extrinsic implements IInherent{
     /**
      * Of inherent
      */
@@ -22,9 +21,9 @@ export class Inherent extends Extrinsic implements IInherent{
     /**
      * Inherent value
      */
-    public arg: UInt64;
+    public arg: Arg;
 
-    constructor(callIndex: u8[] = [], version: u8 = 0, prefix: u8 = 0, arg: UInt64 = new UInt64()){
+    constructor(callIndex: u8[] = [], version: u8 = 0, prefix: u8 = 0, arg: Arg = instantiate<Arg>()){
         super(ExtrinsicType.Inherent);
         this.callIndex = callIndex;
         this.version = version;
@@ -42,7 +41,7 @@ export class Inherent extends Extrinsic implements IInherent{
     /**
      * @description Get argument of inherent
      */
-    getArgument(): Codec{
+    getArgument(): Arg{
         return this.arg;
     }
 
@@ -99,40 +98,17 @@ export class Inherent extends Extrinsic implements IInherent{
         this.version = bytesReader.readInto<Byte>().value;
         this.callIndex = bytesReader.readBytes(2);
         this.prefix = bytesReader.readInto<Byte>().value;
-        this.arg = bytesReader.readInto<UInt64>();
+        this.arg = bytesReader.readInto<Arg>();
     }
     /**
      * @description Convert SCALE encoded bytes to an instance of Inherent
      */
-    static fromU8Array(input: u8[], index: i32 = 0): IExtrinsic{
+    static fromU8Array<Arg extends Codec>(input: u8[], index: i32 = 0): IExtrinsic{
         const bytesReader = new BytesReader(input.slice(index));
         const version = bytesReader.readInto<Byte>().value;
         const callIndex = bytesReader.readBytes(2);
         const prefix = bytesReader.readInto<Byte>().value;
-        const arg = bytesReader.readInto<UInt64>();
+        const arg = bytesReader.readInto<Arg>();
         return new Inherent(callIndex, version, prefix, arg);
-    }
-
-    /**
-     * @description Overloaded == operator
-     * @param a 
-     * @param b 
-     */
-    @inline @operator('==')
-    static eq(a: Inherent, b: Inherent): bool{
-        return Utils.areArraysEqual(a.callIndex, b.callIndex) &&
-            a.prefix == b.prefix &&
-            a.version == b.version &&
-            a.arg == b.arg;
-    }
-
-    /**
-     * @description Overloaded != operator
-     * @param a 
-     * @param b 
-     */
-    @inline @operator('!=')
-    static notEq(a: Inherent, b: Inherent): bool{
-        return !Inherent.eq(a, b);
     }
 }

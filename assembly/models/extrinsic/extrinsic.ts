@@ -88,34 +88,4 @@ export abstract class Extrinsic implements IExtrinsic{
         }
     }
 
-    /**
-     * @description Overloaded == operator
-     * @param a 
-     * @param b 
-     */
-    @inline @operator('==')
-    static eq(a: Extrinsic, b: Extrinsic): bool{
-        const extrinsicType: i32 = a.typeId == b.typeId ? <i32>a.typeId : 0;
-        switch(extrinsicType){
-            case ExtrinsicType.Inherent:{
-                return Inherent.eq(<Inherent>a, <Inherent>b);
-            }
-            case ExtrinsicType.SignedTransaction:{
-                return SignedTransaction.eq(<SignedTransaction>a, <SignedTransaction>b);
-            }
-            default: {
-                return false;
-            }
-        }
-    }
-
-    /**
-     * @description Overloaded != operator
-     * @param a 
-     * @param b 
-     */
-    @inline @operator("!=")
-    static notEq(a: Extrinsic, b: Extrinsic): bool{
-        return !this.eq(a, b);
-    }
 }

@@ -1,37 +1,37 @@
-import { Bool, BytesReader, Codec, CompactInt, Hash, UInt64 } from "as-scale-codec";
-import { Signature } from "..";
+import { Bool, BytesReader, Codec, CompactInt } from "as-scale-codec";
 import { IExtrinsic, ISignedTransaction } from "../interfaces";
 import { Extrinsic, ExtrinsicType } from "./extrinsic";
 
 /**
  * @description Class representing an Extrinsic in the Substrate Runtime
  */
-export class SignedTransaction extends Extrinsic implements ISignedTransaction{
+export class SignedTransaction<Address extends Codec, A extends Codec, N extends Codec, S extends Codec> 
+    extends Extrinsic implements ISignedTransaction<Address, A, N, S>{
     
     /**
      * from address 
      */
-    public from: Hash
+    public from: Address
     
     /**
      * to address
      */
-    public to: Hash
+    public to: Address
 
     /**
      * amount of the transfer
      */
-    public amount: UInt64
+    public amount: A
 
     /**
      * nonce of the transaction
      */
-    public nonce: UInt64
+    public nonce: N
 
     /**
      * the signature of the transaction (64 byte array)
      */
-    public signature: Signature
+    public signature: S;
 
     /**
      * Determines whether to exhaust the gas. Default false
@@ -39,11 +39,11 @@ export class SignedTransaction extends Extrinsic implements ISignedTransaction{
     public exhaustResourcesWhenNotFirst: Bool
 
     constructor(
-        from: Hash = new Hash(), 
-        to: Hash = new Hash(), 
-        amount: UInt64 = new UInt64(), 
-        nonce: UInt64 = new UInt64(), 
-        signature: Signature = new Signature(), 
+        from: Address = instantiate<Address>(), 
+        to: Address = instantiate<Address>(), 
+        amount: A = instantiate<A>(), 
+        nonce: N = instantiate<N>(), 
+        signature: S = instantiate<S>(), 
         exhaustResourcesWhenNotFirst: Bool = new Bool()) 
     {
         super(ExtrinsicType.SignedTransaction);
@@ -65,7 +65,7 @@ export class SignedTransaction extends Extrinsic implements ISignedTransaction{
             .concat(this.to.toU8a())
             .concat(this.amount.toU8a())
             .concat(this.nonce.toU8a())
-            .concat(this.signature.value)
+            .concat(this.signature.toU8a())
             .concat(this.exhaustResourcesWhenNotFirst.toU8a());
     }
 
@@ -89,35 +89,35 @@ export class SignedTransaction extends Extrinsic implements ISignedTransaction{
     /**
      * @description Get amount of transaction
      */
-    getAmount(): Codec{
+    getAmount(): A{
         return this.amount;
     }
 
     /**
      * @description Get nonce of the transaction
      */
-    getNonce(): Codec{
+    getNonce(): N{
         return this.nonce;
     }
 
     /**
      * @description Get signature of the transaction
      */
-    getSignature(): Signature{
+    getSignature(): S{
         return this.signature;
     }
 
     /**
      * @description Get sender of the transaction
      */
-    getFrom(): Codec{
+    getFrom(): Address{
         return this.from;
     }
 
     /**
      * @description Get receiver of the transaction
      */
-    getTo(): Codec{
+    getTo(): Address{
         return this.to;
     }
 
@@ -137,55 +137,33 @@ export class SignedTransaction extends Extrinsic implements ISignedTransaction{
         assert(bytes.length - index > this.getTypeId(), "SignedTransaction: Bytes array with insufficient length");
         const bytesReader = new BytesReader(bytes.slice(index));
         let length = bytesReader.readInto<CompactInt>();
+
         assert(<i32>length.value == this.typeId, "SignedTransaction: Incorrectly encoded SignedTransaction");
-        this.from = bytesReader.readInto<Hash>();
-        this.to = bytesReader.readInto<Hash>();
-        this.amount = bytesReader.readInto<UInt64>();
-        this.nonce = bytesReader.readInto<UInt64>();
-        this.signature = bytesReader.readInto<Signature>();
+
+        this.from = bytesReader.readInto<Address>();
+        this.to = bytesReader.readInto<Address>();
+        this.amount = bytesReader.readInto<A>();
+        this.nonce = bytesReader.readInto<N>();
+        this.signature = bytesReader.readInto<S>();
     }
 
     /**
      * @description Instanciates new Extrinsic object from SCALE encoded byte array
      * @param input - SCALE encoded Extrinsic
      */
-    static fromU8Array(input: u8[], index: i32 = 0): IExtrinsic {
-        assert(input.length - index >= 144, "Extrinsic: Invalid bytes provided. EOF");
+    static fromU8Array<Address extends Codec, A extends Codec, N extends Codec, S extends Codec>(input: u8[], index: i32 = 0): IExtrinsic {
+        assert(input.length - index >= ExtrinsicType.SignedTransaction, "Extrinsic: Invalid bytes provided. EOF");
 
         const bytesReader = new BytesReader(input.slice(index));
 
-        const from = bytesReader.readInto<Hash>();
-        const to = bytesReader.readInto<Hash>();
-        const amount = bytesReader.readInto<UInt64>();
-        const nonce = bytesReader.readInto<UInt64>();
-        const signature = bytesReader.readInto<Signature>();
+        const from = bytesReader.readInto<Address>();
+        const to = bytesReader.readInto<Address>();
+        const amount = bytesReader.readInto<A>();
+        const nonce = bytesReader.readInto<N>();
+        const signature = bytesReader.readInto<S>();
         const exhaustResourcesWhenNotFirst = bytesReader.readInto<Bool>();
 
         return new SignedTransaction(from, to, amount, nonce, signature, exhaustResourcesWhenNotFirst);
-    }
-    
-    /**
-     * @description Overloaded == operator
-     * @param a 
-     * @param b 
-     */
-    @inline @operator('==')
-    static eq(a: SignedTransaction, b: SignedTransaction): bool {
-    return a.from == b.from 
-        && a.to == b.to
-        && a.amount.value == b.amount.value
-        && a.nonce.value == b.nonce.value
-        && a.signature == b.signature;
-    }
-
-    /**
-     * @description Overloaded != operator
-     * @param a 
-     * @param b 
-     */
-    @inline @operator('!=')
-    static notEq(a: SignedTransaction, b: SignedTransaction): bool {
-        return !SignedTransaction.eq(a, b);
     }
 
 }

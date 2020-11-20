@@ -3,31 +3,31 @@ import { Codec } from "as-scale-codec";
 /**
  * @description Interface for SignedTransaction
  */
-export interface ISignedTransaction{
+export interface ISignedTransaction<Address extends Codec, A extends Codec, N extends Codec, S extends Codec>{
     /**
      * @description Get sender of the transaction
      */
-    getFrom(): Codec;
+    getFrom(): Address;
 
     /**
      * @description Get receiver of the transaction
      */
-    getTo(): Codec;
+    getTo(): Address;
 
     /**
      * @description Get amount of transaction
      */
-    getAmount(): Codec;
+    getAmount(): A;
 
     /**
      * @description Get nonce of the transaction
      */    
-    getNonce(): Codec;
+    getNonce(): N;
 
     /**
      * @description Get signature of the transaction
      */
-    getSignature(): Codec;
+    getSignature(): S;
 
     /**
      * @description get SCALE encoded bytes for the Transfer instance
