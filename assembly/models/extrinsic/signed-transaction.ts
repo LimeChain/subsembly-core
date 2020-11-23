@@ -1,12 +1,11 @@
 import { Bool, BytesReader, Codec, CompactInt } from "as-scale-codec";
-import { IExtrinsic, ISignedTransaction } from "../interfaces";
 import { Extrinsic, ExtrinsicType } from "./extrinsic";
 
 /**
  * @description Class representing an Extrinsic in the Substrate Runtime
  */
 export class SignedTransaction<Address extends Codec, A extends Codec, N extends Codec, S extends Codec> 
-    extends Extrinsic implements ISignedTransaction<Address, A, N, S>{
+    extends Extrinsic{
     
     /**
      * from address 
@@ -151,7 +150,7 @@ export class SignedTransaction<Address extends Codec, A extends Codec, N extends
      * @description Instanciates new Extrinsic object from SCALE encoded byte array
      * @param input - SCALE encoded Extrinsic
      */
-    static fromU8Array<Address extends Codec, A extends Codec, N extends Codec, S extends Codec>(input: u8[], index: i32 = 0): IExtrinsic {
+    static fromU8Array<Address extends Codec, A extends Codec, N extends Codec, S extends Codec>(input: u8[], index: i32 = 0): Extrinsic {
         assert(input.length - index >= ExtrinsicType.SignedTransaction, "Extrinsic: Invalid bytes provided. EOF");
 
         const bytesReader = new BytesReader(input.slice(index));

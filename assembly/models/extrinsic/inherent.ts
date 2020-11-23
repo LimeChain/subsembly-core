@@ -1,11 +1,10 @@
 import { Byte, BytesReader, Codec, CompactInt } from 'as-scale-codec';
-import { IExtrinsic, IInherent } from '../interfaces';
 import { Extrinsic, ExtrinsicType } from './extrinsic';
 
 /**
  * @description Class representing Inherent type into Substrate
  */
-export class Inherent<Arg extends Codec> extends Extrinsic implements IInherent{
+export class Inherent<Arg extends Codec> extends Extrinsic{
     /**
      * Of inherent
      */
@@ -103,7 +102,7 @@ export class Inherent<Arg extends Codec> extends Extrinsic implements IInherent{
     /**
      * @description Convert SCALE encoded bytes to an instance of Inherent
      */
-    static fromU8Array<Arg extends Codec>(input: u8[], index: i32 = 0): IExtrinsic{
+    static fromU8Array<Arg extends Codec>(input: u8[], index: i32 = 0): Extrinsic{
         const bytesReader = new BytesReader(input.slice(index));
         const version = bytesReader.readInto<Byte>().value;
         const callIndex = bytesReader.readBytes(2);
