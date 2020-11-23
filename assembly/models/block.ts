@@ -96,7 +96,7 @@ export class Block<H extends Codec, E extends Codec> implements Codec{
         this.header = bytesReader.readInto<H>();
         let extrinsics: E[] = [];
         const extrinsicsLength = bytesReader.readInto<CompactInt>();
-        for(let i=0; i < <i32>(extrinsicsLength.value); i++){
+        for(let i=0; i < <i32>(extrinsicsLength.unwrap()); i++){
             const decodedExtrinsic: E = bytesReader.readInto<E>();
             extrinsics.push(decodedExtrinsic);
         }
@@ -131,7 +131,7 @@ export class Block<H extends Codec, E extends Codec> implements Codec{
 
         const extrinsicsLength = bytesReader.readInto<CompactInt>();
         let extrinsics: E[] = [];
-        for (let i = 0; i < <i32>extrinsicsLength.value; i++) {
+        for (let i = 0; i < <i32>extrinsicsLength.unwrap(); i++) {
             const decodedExtrinsic: E = bytesReader.readInto<E>();
             extrinsics.push(decodedExtrinsic);
         }

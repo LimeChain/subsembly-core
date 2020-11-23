@@ -137,7 +137,7 @@ export class SignedTransaction<Address extends Codec, A extends Codec, N extends
         const bytesReader = new BytesReader(bytes.slice(index));
         let length = bytesReader.readInto<CompactInt>();
 
-        assert(<i32>length.value == this.typeId, "SignedTransaction: Incorrectly encoded SignedTransaction");
+        assert(<i32>length.unwrap() == this.typeId, "SignedTransaction: Incorrectly encoded SignedTransaction");
 
         this.from = bytesReader.readInto<Address>();
         this.to = bytesReader.readInto<Address>();

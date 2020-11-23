@@ -82,7 +82,7 @@ export class Inherent<Arg extends Codec> extends Extrinsic{
             .concat(this.callIndex)
             .concat([this.prefix])
             .concat(this.arg.toU8a());
-        return result.slice(0, <i32>len.value + len.encodedLength());
+        return result.slice(0, <i32>len.unwrap() + len.encodedLength());
     }
 
     /**
@@ -93,10 +93,10 @@ export class Inherent<Arg extends Codec> extends Extrinsic{
     populateFromBytes(bytes: u8[], index: i32 = 0): void {
         const bytesReader = new BytesReader(bytes.slice(index));
         let length = bytesReader.readInto<CompactInt>();
-        assert(<i32>length.value == <i32>this.typeId, "Inherent: incorrectly encoded Inherent");
-        this.version = bytesReader.readInto<Byte>().value;
+        assert(<i32>length.unwrap() == <i32>this.typeId, "Inherent: incorrectly encoded Inherent");
+        this.version = bytesReader.readInto<Byte>().unwrap();
         this.callIndex = bytesReader.readBytes(2);
-        this.prefix = bytesReader.readInto<Byte>().value;
+        this.prefix = bytesReader.readInto<Byte>().unwrap();
         this.arg = bytesReader.readInto<Arg>();
     }
     /**
@@ -104,9 +104,9 @@ export class Inherent<Arg extends Codec> extends Extrinsic{
      */
     static fromU8Array<Arg extends Codec>(input: u8[], index: i32 = 0): Extrinsic{
         const bytesReader = new BytesReader(input.slice(index));
-        const version = bytesReader.readInto<Byte>().value;
+        const version = bytesReader.readInto<Byte>().unwrap();
         const callIndex = bytesReader.readBytes(2);
-        const prefix = bytesReader.readInto<Byte>().value;
+        const prefix = bytesReader.readInto<Byte>().unwrap();
         const arg = bytesReader.readInto<Arg>();
         return new Inherent(callIndex, version, prefix, arg);
     }

@@ -70,7 +70,7 @@ export class InherentData<V extends Codec> implements Codec {
     populateFromBytes(bytes: u8[], index: i32 = 0): void {
         const bytesReader = new BytesReader(bytes.slice(index));
         const lenComp = bytesReader.readInto<CompactInt>();
-        for(let i: i32 = 0; i < lenComp.value; i++){
+        for(let i: i32 = 0; i < lenComp.unwrap(); i++){
             const buff = new Uint8Array(InherentData.INHERENT_IDENTIFIER_LENGTH);
             Bytes.copyToTyped(bytesReader.readBytes(InherentData.INHERENT_IDENTIFIER_LENGTH), buff);
             let key: string =  String.UTF8.decode(buff.buffer);
@@ -87,7 +87,7 @@ export class InherentData<V extends Codec> implements Codec {
         const bytesReader = new BytesReader(input.slice(index));
         const lenComp = bytesReader.readInto<CompactInt>();
 
-        for (let i: i32 = 0; i<lenComp.value; i++){
+        for (let i: i32 = 0; i<lenComp.unwrap(); i++){
             const buff = new Uint8Array(InherentData.INHERENT_IDENTIFIER_LENGTH);
             Bytes.copyToTyped(bytesReader.readBytes(InherentData.INHERENT_IDENTIFIER_LENGTH), buff);
             let key: string =  String.UTF8.decode(buff.buffer);
@@ -125,7 +125,6 @@ export class InherentData<V extends Codec> implements Codec {
      * @param a instance of InherentData
      * @param b Instance of InherentData
      */
-    @inline @operator('!=')
     notEq(other: InherentData<V>): bool{
         return !this.eq(other);
     }

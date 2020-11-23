@@ -78,7 +78,7 @@ export class ExtrinsicData<Index extends Codec, V extends Codec> implements Code
     populateFromBytes(bytes: u8[], index: i32 = 0): void {
         const bytesReader = new BytesReader(bytes.slice(index));
         const lenComp = bytesReader.readInto<CompactInt>();
-        for(let i: i32 = 0; i < lenComp.value; i++){
+        for(let i: i32 = 0; i < lenComp.unwrap(); i++){
             const key = bytesReader.readInto<Index>();
             const value = bytesReader.readInto<V>();
             this.data.set(key, value);
@@ -93,7 +93,7 @@ export class ExtrinsicData<Index extends Codec, V extends Codec> implements Code
         const bytesReader = new BytesReader(input.slice(index));
         const lenKeys = bytesReader.readInto<CompactInt>();
         
-        for (let i: i32 = 0; i < lenKeys.value; i++){
+        for (let i: i32 = 0; i < lenKeys.unwrap(); i++){
             const key = bytesReader.readInto<Index>();
             const value = bytesReader.readInto<V>();
             data.set(key, value);
@@ -128,7 +128,6 @@ export class ExtrinsicData<Index extends Codec, V extends Codec> implements Code
      * @param a instance of ExtrinsicData
      * @param b Instance of ExtrinsicData
      */
-    @inline @operator('!=')
     notEq(other: ExtrinsicData<Index, V>): bool {
         return !this.eq(other);
     }

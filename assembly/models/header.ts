@@ -115,7 +115,7 @@ export class Header<N extends Codec, H extends Codec> implements Codec{
             const length = new CompactInt(digestItemArray.length);
             digest = digest.concat(length.toU8a());
             
-            for (let i = 0; i < length.value; i++){
+            for (let i = 0; i < length.unwrap(); i++){
                 digest = digest.concat(digestItemArray[i].toU8a());
             }
         } else {
@@ -188,7 +188,7 @@ export class Header<N extends Codec, H extends Codec> implements Codec{
             input = input.slice(itemsLength.encodedLength());
             digestOption = new Option<DigestItem[]>(new Array<DigestItem>());
             
-            for (let i = 0; i < itemsLength.value; i++) {
+            for (let i = 0; i < itemsLength.unwrap(); i++) {
                 let decodedItem = DigestItem.fromU8Array(input);
                 (<DigestItem[]>digestOption.unwrap()).push(decodedItem.result);
                 input = decodedItem.input;

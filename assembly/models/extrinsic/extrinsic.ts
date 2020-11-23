@@ -73,7 +73,7 @@ export abstract class Extrinsic implements Codec{
     static fromU8Array(input: u8[], index: i32 = 0): Extrinsic{
         const bytesReader = new BytesReader(input.slice(index));
         const cmpLen = bytesReader.readInto<CompactInt>();
-        const type = <i32>cmpLen.value;
+        const type = <i32>cmpLen.unwrap();
         switch(type){
             case ExtrinsicType.Inherent:{
                 return Inherent.fromU8Array(bytesReader.getLeftoverBytes());
