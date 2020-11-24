@@ -1,31 +1,30 @@
-import { BytesReader, CompactInt, Hash } from "as-scale-codec";
+import { BytesReader, Codec, CompactInt } from "as-scale-codec";
 import { DecodedData, DigestItem, Option } from ".";
 import { Utils } from "../utils";
 import { Constants } from "./constants";
-import { IHeader } from "./interfaces/header";
 
 /**
  * @description Class representing a Block Header into the Substrate Runtime
  */
-export class Header implements IHeader{
+export class Header<N extends Codec, H extends Codec> implements Codec{
 
     /**
      * 32-byte Blake hash of the header of the parent of the block
      */
-    public parentHash: Hash
+    public parentHash: H
     /**
      * Integer, which represents the index of the current block in the chain.
      * It is equal to the number of the ancestor blocks.
      */
-    public number: CompactInt
+    public number: N
     /**
      * Root of the Merkle trie, whose leaves implement the storage of the system.
      */
-    public stateRoot: Hash
+    public stateRoot: H
     /**
      * Field reserved for the Runtime to validate the integrity of the extrinsics composing the block body.
      */
-    public extrinsicsRoot: Hash
+    public extrinsicsRoot: H
     /**
      * Field used to store any chain-specific auxiliary data, which could help the light clients interact with the block 
      * without the need of accessing the full storage as well as consensus-related data including the block signature. 
@@ -33,10 +32,10 @@ export class Header implements IHeader{
     public digests: Option<DigestItem[]>
 
     constructor(
-        parentHash: Hash = new Hash(), 
-        number: CompactInt = new CompactInt(), 
-        stateRoot: Hash = new Hash(), 
-        extrinsicsRoot: Hash = new Hash(), 
+        parentHash: H = instantiate<H>(), 
+        number: N = instantiate<N>(), 
+        stateRoot: H = instantiate<H>(), 
+        extrinsicsRoot: H = instantiate<H>(), 
         digests: Option<DigestItem[]> = new Option())
     {
         this.parentHash = parentHash;
@@ -49,28 +48,28 @@ export class Header implements IHeader{
     /**
      * @description Get block number
      */
-    getNumber(): CompactInt{
+    getNumber(): N{
         return this.number;
     }
 
     /**
      * @description Get extriniscsRoot
      */
-    getExtrinsicsRoot(): Hash{
+    getExtrinsicsRoot(): H{
         return this.extrinsicsRoot;
     }
     
     /**
      * @description Get parentHash
      */
-    getParentHash(): Hash{
+    getParentHash(): H{
         return this.parentHash;
     }
     
     /**
      * @description Get stateRoot
      */
-    getStateRoot(): Hash{
+    getStateRoot(): H{
         return this.stateRoot;
     }
     
@@ -99,10 +98,10 @@ export class Header implements IHeader{
      */
     populateFromBytes(bytes: u8[], index: i32 = 0): void{
         const bytesReader = new BytesReader(bytes.slice(index));
-        this.parentHash = bytesReader.readInto<Hash>();
-        this.number = bytesReader.readInto<CompactInt>();
-        this.stateRoot = bytesReader.readInto<Hash>();
-        this.extrinsicsRoot = bytesReader.readInto<Hash>();
+        this.parentHash = bytesReader.readInto<H>();
+        this.number = bytesReader.readInto<N>();
+        this.stateRoot = bytesReader.readInto<H>();
+        this.extrinsicsRoot = bytesReader.readInto<H>();
         this.digests = Header.decodeOptionalDigest(bytesReader.getLeftoverBytes()).getResult();
     }
 
@@ -116,7 +115,7 @@ export class Header implements IHeader{
             const length = new CompactInt(digestItemArray.length);
             digest = digest.concat(length.toU8a());
             
-            for (let i = 0; i < length.value; i++){
+            for (let i = 0; i < length.unwrap(); i++){
                 digest = digest.concat(digestItemArray[i].toU8a());
             }
         } else {
@@ -131,16 +130,45 @@ export class Header implements IHeader{
     }
 
     /**
+     * Overloaded == operator
+     * @param a 
+     * @param b 
+     */
+    eq(other: Header<N, H>): bool {
+        let areEqual = this.parentHash == other.parentHash
+            && this.number == other.number
+            && this.stateRoot == other.stateRoot
+            && this.extrinsicsRoot == other.extrinsicsRoot;
+
+        if (this.digests.isSome() && other.digests.isSome()) {
+            return areEqual && Utils.areArraysEqual(<DigestItem[]>this.digests.unwrap(), <DigestItem[]>other.digests.unwrap());
+        } else if (!this.digests.isSome() && !other.digests.isSome()) {
+            return areEqual;
+        }else {
+            return false;
+        }
+    }
+
+    /**
+     * Overloaded != operator
+     * @param a 
+     * @param b 
+     */
+    notEq(other: Header<N, H>): bool {
+        return !this.eq(other);
+    }
+
+    /**
      * @description Instanciates new Header object from SCALE encoded byte array
      * @param input - SCALE encoded Header
      */
-    static fromU8Array(input: u8[], index: i32 = 0): DecodedData<IHeader> {
+    static fromU8Array<N extends Codec, H extends Codec>(input: u8[], index: i32 = 0): DecodedData<Header<N, H>> {
         const bytesReader = new BytesReader(input.slice(index));
 
-        const parentHash = bytesReader.readInto<Hash>();
-        const number = bytesReader.readInto<CompactInt>();
-        const stateRoot = bytesReader.readInto<Hash>();
-        const extrinsicsRoot = bytesReader.readInto<Hash>();
+        const parentHash = bytesReader.readInto<H>();
+        const number = bytesReader.readInto<N>();
+        const stateRoot = bytesReader.readInto<H>();
+        const extrinsicsRoot = bytesReader.readInto<H>();
 
         const digest = this.decodeOptionalDigest(bytesReader.getLeftoverBytes());
         
@@ -160,7 +188,7 @@ export class Header implements IHeader{
             input = input.slice(itemsLength.encodedLength());
             digestOption = new Option<DigestItem[]>(new Array<DigestItem>());
             
-            for (let i = 0; i < itemsLength.value; i++) {
+            for (let i = 0; i < itemsLength.unwrap(); i++) {
                 let decodedItem = DigestItem.fromU8Array(input);
                 (<DigestItem[]>digestOption.unwrap()).push(decodedItem.result);
                 input = decodedItem.input;
@@ -169,36 +197,5 @@ export class Header implements IHeader{
             input = input.slice(1);
         }
         return new DecodedData<Option<DigestItem[]>>(digestOption, input);
-    }
-
-    /**
-     * Overloaded == operator
-     * @param a 
-     * @param b 
-     */
-    @inline @operator('==')
-    static eq(a: Header, b: Header): bool {
-        let areEqual = a.parentHash == b.parentHash
-            && a.number == b.number
-            && a.stateRoot == b.stateRoot
-            && a.extrinsicsRoot == b.extrinsicsRoot;
-
-        if (a.digests.isSome() && b.digests.isSome()) {
-            return areEqual && Utils.areArraysEqual(<DigestItem[]>a.digests.unwrap(), <DigestItem[]>b.digests.unwrap());
-        } else if (!a.digests.isSome() && !b.digests.isSome()) {
-            return areEqual;
-        }else {
-            return false;
-        }
-    }
-
-    /**
-     * Overloaded != operator
-     * @param a 
-     * @param b 
-     */
-    @inline @operator('!=')
-    static notEq(a: Header, b: Header): bool {
-        return !Header.eq(a, b);
     }
 }

@@ -1,19 +1,17 @@
-import { ByteArray, BytesReader, CompactInt, Hash } from "as-scale-codec";
-import { DecodedData, Extrinsic, Header, IExtrinsic, IHeader, Option } from ".";
+import { ByteArray, BytesReader, Codec, CompactInt, Hash } from "as-scale-codec";
+import { DecodedData, Option } from ".";
 import { Utils } from "../utils";
 import { Constants } from "./constants";
-import { Inherent } from "./extrinsic";
-import { IBlock } from "./interfaces";
 
 /**
  * @description Class representing a Block into the Substrate Runtime
  */
-export class Block implements IBlock{
+export class Block<H extends Codec, E extends Codec> implements Codec{
 
     /**
      * Block Header
      */
-    public header: IHeader
+    public header: H
 
     /**
      * Block header hash
@@ -23,7 +21,7 @@ export class Block implements IBlock{
     /**
      * Array of Extrinsics
      */
-    public body: IExtrinsic[]
+    public body: E[]
     /**
      * Block Receipt
      */
@@ -37,7 +35,7 @@ export class Block implements IBlock{
      */
     public justification: Option<ByteArray>
 
-    constructor(header: IHeader = new Header(), body: IExtrinsic[] = []) {
+    constructor(header: H = instantiate<H>(), body: E[] = []) {
         this.header = header;
         this.headerHash = new Option<Hash>(null);
         this.body = body;
@@ -67,14 +65,14 @@ export class Block implements IBlock{
     /**
      * @description Get header
      */
-    getHeader(): IHeader{
+    getHeader(): H{
         return this.header;
     }
 
     /**
      * @description Get array of extrinsics
      */
-    getExtrinsics(): IExtrinsic[]{
+    getExtrinsics(): E[]{
         return this.body;
     }
 
@@ -95,32 +93,14 @@ export class Block implements IBlock{
      */
     populateFromBytes(bytes: u8[], index: i32 = 0): void{
         const bytesReader = new BytesReader(bytes.slice(index));
-        this.header = bytesReader.readInto<Header>();
-        let extrinsics: IExtrinsic[] = [];
+        this.header = bytesReader.readInto<H>();
+        let extrinsics: E[] = [];
         const extrinsicsLength = bytesReader.readInto<CompactInt>();
-        for(let i=0; i < <i32>(extrinsicsLength.value); i++){
-            const decodedExtrinsic: IExtrinsic= bytesReader.readInto<Extrinsic>();
+        for(let i=0; i < <i32>(extrinsicsLength.unwrap()); i++){
+            const decodedExtrinsic: E = bytesReader.readInto<E>();
             extrinsics.push(decodedExtrinsic);
         }
         this.body = extrinsics;
-    }
-    /**
-     * @description Instanciates new Block object from SCALE encoded byte array
-     * @param input - SCALE encoded Block
-     */
-    static fromU8Array(input: u8[], index: i32 = 0): DecodedData<IBlock> {
-        const bytesReader = new BytesReader(input.slice(index));
-        const header: IHeader = bytesReader.readInto<Header>();
-
-        const extrinsicsLength = bytesReader.readInto<CompactInt>();
-        let extrinsics: IExtrinsic[] = [];
-        for (let i = 0; i < <i32>extrinsicsLength.value; i++) {
-            const decodedExtrinsic: IExtrinsic = bytesReader.readInto<Inherent>();
-            extrinsics.push(decodedExtrinsic);
-        }
-        
-        const block = new Block(header, extrinsics);
-        return new DecodedData(block, input);
     }
 
     /**
@@ -128,17 +108,35 @@ export class Block implements IBlock{
      * @param a 
      * @param b 
      */
-    @inline @operator('==')
-    static eq(a: Block, b: Block): bool {
-        return a.header == b.header && Utils.areArraysEqual(a.body, b.body);
+    eq(other: Block<H, E>): bool {
+        return this.header == other.header && Utils.areArraysEqual(this.body, other.body);
     }
+    
     /**
      * @description Overloaded != operator
      * @param a 
      * @param b 
      */
-    @inline @operator('!=')
-    static notEq(a: Block, b: Block): bool {
-        return !Block.eq(a, b);
+    notEq(other: Block<H, E>): bool {
+        return !this.eq(other);
+    }
+
+    /**
+     * @description Instanciates new Block object from SCALE encoded byte array
+     * @param input - SCALE encoded Block
+     */
+    static fromU8Array<H extends Codec, E extends Codec>(input: u8[], index: i32 = 0): DecodedData<Block<H, E>> {
+        const bytesReader = new BytesReader(input.slice(index));
+        const header: H = bytesReader.readInto<H>();
+
+        const extrinsicsLength = bytesReader.readInto<CompactInt>();
+        let extrinsics: E[] = [];
+        for (let i = 0; i < <i32>extrinsicsLength.unwrap(); i++) {
+            const decodedExtrinsic: E = bytesReader.readInto<E>();
+            extrinsics.push(decodedExtrinsic);
+        }
+        
+        const block = new Block(header, extrinsics);
+        return new DecodedData(block, input);
     }
 }

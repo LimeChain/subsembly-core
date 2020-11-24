@@ -1,5 +1,4 @@
-import { BytesReader, CompactInt } from 'as-scale-codec';
-import { IExtrinsic } from "..";
+import { BytesReader, Codec, CompactInt } from 'as-scale-codec';
 import { Inherent } from "./inherent";
 import { SignedTransaction } from "./signed-transaction";
 
@@ -25,7 +24,7 @@ export enum ExtrinsicType{
 /**
  * Base class representing Extrinsic into the Substrate runtime
  */
-export abstract class Extrinsic implements IExtrinsic{
+export abstract class Extrinsic implements Codec{
     /**
      * Type of extrinsic
      */
@@ -51,10 +50,13 @@ export abstract class Extrinsic implements IExtrinsic{
      * @description Checks whether the extrinsic is inherent
      * @param ext 
      */
-    static isInherent(ext: IExtrinsic): bool{
+    static isInherent(ext: Extrinsic): bool{
         return ext.getTypeId() == ExtrinsicType.Inherent;
     }
     
+    abstract eq(other: Extrinsic): bool;
+    abstract notEq(other: Extrinsic): bool;
+
     /**
      * @description Encoded byte length of the instance
      */
@@ -71,10 +73,10 @@ export abstract class Extrinsic implements IExtrinsic{
      * @description Static constructor
      * @param input 
      */
-    static fromU8Array(input: u8[], index: i32 = 0): IExtrinsic{
+    static fromU8Array(input: u8[], index: i32 = 0): Extrinsic{
         const bytesReader = new BytesReader(input.slice(index));
         const cmpLen = bytesReader.readInto<CompactInt>();
-        const type = <i32>cmpLen.value;
+        const type = <i32>cmpLen.unwrap();
         switch(type){
             case ExtrinsicType.Inherent:{
                 return Inherent.fromU8Array(bytesReader.getLeftoverBytes());

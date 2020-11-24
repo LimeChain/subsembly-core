@@ -1,10 +1,10 @@
-import { BytesReader } from "as-scale-codec";
-import { ISignature } from "./interfaces";
+import { BytesReader, Codec } from "as-scale-codec";
+import { Utils } from "../utils";
 
 /**
  * @description Class representing a Signature in the Substrate Runtime
  */
-export class Signature implements ISignature {
+export class Signature implements Codec {
 
     /**
      * Length of the bytes of a signature
@@ -65,16 +65,8 @@ export class Signature implements ISignature {
      * @param a 
      * @param b 
      */
-    @inline @operator('==')
-    static eq(a: Signature, b: Signature): bool {
-        let areEqual = true;
-        for (let i = 0; i < Signature.SIGNATURE_LENGTH; i++) {
-            if (a.value[i] != b.value[i]) {
-                areEqual = false;
-                break;
-            }
-        }
-        return areEqual;
+    eq(other: Signature): bool {
+        return Utils.areArraysEqual(this.value, other.value);
     }
 
     /**
@@ -82,8 +74,7 @@ export class Signature implements ISignature {
      * @param a 
      * @param b 
      */
-    @inline @operator('!=')
-    static notEq(a: Signature, b: Signature): bool{
-        return !Signature.eq(a, b);
+    notEq(other: Signature): bool{
+        return !this.eq(other)
     }
 }

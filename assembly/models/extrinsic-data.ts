@@ -1,18 +1,17 @@
-import { ByteArray, BytesReader, CompactInt, UInt32 } from 'as-scale-codec';
+import { BytesReader, Codec, CompactInt } from 'as-scale-codec';
 import { DecodedData } from './decoded-data';
-import { IExtrinsicData } from './interfaces';
 
 /**
  * @description Model that keeps the map of extrinsics to their indices
  */
-export class ExtrinsicData implements IExtrinsicData {
+export class ExtrinsicData<Index extends Codec, V extends Codec> implements Codec {
     /**
      * @description Extrinsic data for the current block 
      * (maps an extrinsic's index to its data/bytes)
      */
-    public data: Map<UInt32, ByteArray>;
+    public data: Map<Index, V>;
     
-    constructor(data: Map<UInt32, ByteArray> = new Map<UInt32, ByteArray>()){
+    constructor(data: Map<Index, V> = new Map<Index, V>()){
         this.data = data;
     }
 
@@ -21,7 +20,7 @@ export class ExtrinsicData implements IExtrinsicData {
      */
     toU8a(): u8[]{
         let result: u8[] = [];
-        let keys: UInt32[] = this.data.keys();
+        let keys: Index[] = this.data.keys();
         let lenData: CompactInt = new CompactInt(<u8>(keys.length));
         result = result.concat(lenData.toU8a());
         for(let i = 0; i < keys.length; i++){
@@ -40,7 +39,7 @@ export class ExtrinsicData implements IExtrinsicData {
      */
     toEnumeratedValues(): u8[]{
         let result: u8[] = [];
-        let keys: UInt32[] = this.data.keys();
+        let keys: Index[] = this.data.keys();
         let lenData: CompactInt = new CompactInt(<u8>(keys.length));
         result = result.concat(lenData.toU8a());
         for(let i=0; i < keys.length; i++){
@@ -55,7 +54,7 @@ export class ExtrinsicData implements IExtrinsicData {
     /**
      * @description Get data of the instance
      */
-    getData(): Map<UInt32, ByteArray>{
+    getData(): Map<Index, V>{
         return this.data; 
     }
 
@@ -64,7 +63,7 @@ export class ExtrinsicData implements IExtrinsicData {
      * @param key 
      * @param value 
      */
-    insert(key: UInt32, value: ByteArray): void {
+    insert(key: Index, value: V): void {
         this.data.set(key, value);
     }
 
@@ -79,9 +78,9 @@ export class ExtrinsicData implements IExtrinsicData {
     populateFromBytes(bytes: u8[], index: i32 = 0): void {
         const bytesReader = new BytesReader(bytes.slice(index));
         const lenComp = bytesReader.readInto<CompactInt>();
-        for(let i: i32 = 0; i < lenComp.value; i++){
-            const key = bytesReader.readInto<UInt32>();
-            const value = bytesReader.readInto<ByteArray>();
+        for(let i: i32 = 0; i < lenComp.unwrap(); i++){
+            const key = bytesReader.readInto<Index>();
+            const value = bytesReader.readInto<V>();
             this.data.set(key, value);
         }
     }
@@ -89,29 +88,28 @@ export class ExtrinsicData implements IExtrinsicData {
      * @description Initializes ExtrinsicData from bytes
      * @param input SCALE encoded bytes
      */
-    static fromU8Array(input: u8[], index: i32 = 0): DecodedData<ExtrinsicData>{
-        const data: Map<UInt32, ByteArray> = new Map();
+    static fromU8Array<Index extends Codec, V extends Codec>(input: u8[], index: i32 = 0): DecodedData<ExtrinsicData<Index, V>>{
+        const data: Map<Index, V> = new Map();
         const bytesReader = new BytesReader(input.slice(index));
         const lenKeys = bytesReader.readInto<CompactInt>();
         
-        for (let i: i32 = 0; i < lenKeys.value; i++){
-            const key = bytesReader.readInto<UInt32>();
-            const value = bytesReader.readInto<ByteArray>();
+        for (let i: i32 = 0; i < lenKeys.unwrap(); i++){
+            const key = bytesReader.readInto<Index>();
+            const value = bytesReader.readInto<V>();
             data.set(key, value);
         }
-        const extcsData = new ExtrinsicData(data);
-        return new DecodedData<ExtrinsicData>(extcsData, input);
+        const extcsData = new ExtrinsicData<Index, V>(data);
+        return new DecodedData<ExtrinsicData<Index, V>>(extcsData, input);
     }   
     /**
      * @description Overloaded == operator
      * @param a instance of ExtrinsicData
      * @param b Instance of ExtrinsicData
      */
-    @inline @operator('==')
-    static eq(a: ExtrinsicData, b: ExtrinsicData): bool {
+    eq(other: ExtrinsicData<Index, V>): bool {
         let areEqual = true;
-        const aKeys = a.data.keys();
-        const bKeys = b.data.keys();
+        const aKeys = this.data.keys();
+        const bKeys = other.data.keys();
 
         if(aKeys.length != bKeys.length){
             return false;
@@ -130,8 +128,7 @@ export class ExtrinsicData implements IExtrinsicData {
      * @param a instance of ExtrinsicData
      * @param b Instance of ExtrinsicData
      */
-    @inline @operator('!=')
-    static notEq(a: ExtrinsicData, b: ExtrinsicData): bool {
-        return !ExtrinsicData.eq(a, b);
+    notEq(other: ExtrinsicData<Index, V>): bool {
+        return !this.eq(other);
     }
 }

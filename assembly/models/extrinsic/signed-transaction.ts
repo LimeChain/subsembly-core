@@ -1,12 +1,11 @@
 import { Bool, BytesReader, Codec, CompactInt } from "as-scale-codec";
-import { IExtrinsic, ISignedTransaction } from "../interfaces";
 import { Extrinsic, ExtrinsicType } from "./extrinsic";
 
 /**
  * @description Class representing an Extrinsic in the Substrate Runtime
  */
 export class SignedTransaction<Address extends Codec, A extends Codec, N extends Codec, S extends Codec> 
-    extends Extrinsic implements ISignedTransaction<Address, A, N, S>{
+    extends Extrinsic{
     
     /**
      * from address 
@@ -129,6 +128,25 @@ export class SignedTransaction<Address extends Codec, A extends Codec, N extends
     }
 
     /**
+     * @description Checks if this instance is equal to other instance
+     * @param other 
+     */
+    eq(other: SignedTransaction<Address, A, N, S>): bool{
+        return this.from == other.from 
+            && this.to == other.to
+            && this.amount == other.amount
+            && this.signature == other.signature;
+    }
+
+    /**
+     * @description Checks if this instance is not equal to other instance
+     * @param other 
+     */
+    notEq(other: SignedTransaction<Address, A, N, S>): bool{
+        return !this.eq(other);
+    }
+
+    /**
      * @description Non static constructor from bytes
      * @param bytes SCALE encoded bytes
      * @param index starting index
@@ -138,7 +156,7 @@ export class SignedTransaction<Address extends Codec, A extends Codec, N extends
         const bytesReader = new BytesReader(bytes.slice(index));
         let length = bytesReader.readInto<CompactInt>();
 
-        assert(<i32>length.value == this.typeId, "SignedTransaction: Incorrectly encoded SignedTransaction");
+        assert(<i32>length.unwrap() == this.typeId, "SignedTransaction: Incorrectly encoded SignedTransaction");
 
         this.from = bytesReader.readInto<Address>();
         this.to = bytesReader.readInto<Address>();
@@ -151,7 +169,7 @@ export class SignedTransaction<Address extends Codec, A extends Codec, N extends
      * @description Instanciates new Extrinsic object from SCALE encoded byte array
      * @param input - SCALE encoded Extrinsic
      */
-    static fromU8Array<Address extends Codec, A extends Codec, N extends Codec, S extends Codec>(input: u8[], index: i32 = 0): IExtrinsic {
+    static fromU8Array<Address extends Codec, A extends Codec, N extends Codec, S extends Codec>(input: u8[], index: i32 = 0): Extrinsic {
         assert(input.length - index >= ExtrinsicType.SignedTransaction, "Extrinsic: Invalid bytes provided. EOF");
 
         const bytesReader = new BytesReader(input.slice(index));

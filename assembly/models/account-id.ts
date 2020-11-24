@@ -1,12 +1,11 @@
-import { BytesReader } from "as-scale-codec";
+import { BytesReader, Codec } from "as-scale-codec";
 import { DecodedData } from ".";
 import { Utils } from "../utils";
-import { IAccountId } from "./interfaces";
 
 /**
  * @description Thin wrapper of SCALE Hash that represents Account ID (SS58)
  */
-export class AccountId implements IAccountId {
+export class AccountId implements Codec {
 
     /**
      * Length of Address in Bytes
@@ -55,6 +54,25 @@ export class AccountId implements IAccountId {
         this.address = new Array<u8>();
         this.address = this.address.concat(bytes.slice(index, AccountId.ADDRESS_LENGTH));
     }
+
+    /**
+     * @description Overloaded == operator
+     * @param a 
+     * @param b 
+     */
+    eq(other: AccountId): bool {
+        return Utils.areArraysEqual(this.getAddress(), other.getAddress());
+    }
+
+    /**
+     * @description Overloaded != operator
+     * @param a 
+     * @param b 
+     */
+    notEq(other: AccountId): bool {
+        return this.eq(other);
+    }
+
     /**
      * Instanciates new Account ID from Bytes Array
      * @param input 
@@ -66,24 +84,13 @@ export class AccountId implements IAccountId {
         return new DecodedData<AccountId>(accId, bytesReader.getLeftoverBytes());
     }
 
-    /**
-     * @description Overloaded == operator
-     * @param a 
-     * @param b 
-     */
     @inline @operator('==')
-    static eq(a: AccountId, b: AccountId): bool {
-        return Utils.areArraysEqual(a.getAddress(), b.getAddress());
+    static eq(a: AccountId, b: AccountId): bool{
+        return a.eq(b);
     }
 
-    /**
-     * @description Overloaded != operator
-     * @param a 
-     * @param b 
-     */
     @inline @operator('!=')
-    static notEq(a: AccountId, b: AccountId): bool {
-        return !Utils.areArraysEqual(a.getAddress(), b.getAddress());
+    static notEq(a: AccountId, b: AccountId): bool{
+        return a.notEq(b);
     }
-
 }

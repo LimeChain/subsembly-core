@@ -1,11 +1,10 @@
 import { Byte, BytesReader, Codec, CompactInt } from 'as-scale-codec';
-import { IExtrinsic, IInherent } from '../interfaces';
 import { Extrinsic, ExtrinsicType } from './extrinsic';
 
 /**
  * @description Class representing Inherent type into Substrate
  */
-export class Inherent<Arg extends Codec> extends Extrinsic implements IInherent{
+export class Inherent<Arg extends Codec> extends Extrinsic{
     /**
      * Of inherent
      */
@@ -74,6 +73,25 @@ export class Inherent<Arg extends Codec> extends Extrinsic implements IInherent{
     }
 
     /**
+     * @description Checks if this instance is equal to other instance
+     * @param other 
+     */
+    eq(other: Inherent<Arg>): bool{
+        return this.callIndex == other.callIndex
+            && this.version == other.version
+            && this.prefix == other.prefix
+            && this.arg == other.arg;
+    }
+
+    /**
+     * @description Checks if this instance is not equal to other instance
+     * @param other 
+     */
+    notEq(other: Inherent<Arg>): bool{
+        return !this.eq(other);
+    }
+
+    /**
      * @description Converts to SCALE encoded bytes
      */
     toU8a(): u8[]{
@@ -83,7 +101,7 @@ export class Inherent<Arg extends Codec> extends Extrinsic implements IInherent{
             .concat(this.callIndex)
             .concat([this.prefix])
             .concat(this.arg.toU8a());
-        return result.slice(0, <i32>len.value + len.encodedLength());
+        return result.slice(0, <i32>len.unwrap() + len.encodedLength());
     }
 
     /**
@@ -94,20 +112,20 @@ export class Inherent<Arg extends Codec> extends Extrinsic implements IInherent{
     populateFromBytes(bytes: u8[], index: i32 = 0): void {
         const bytesReader = new BytesReader(bytes.slice(index));
         let length = bytesReader.readInto<CompactInt>();
-        assert(<i32>length.value == <i32>this.typeId, "Inherent: incorrectly encoded Inherent");
-        this.version = bytesReader.readInto<Byte>().value;
+        assert(<i32>length.unwrap() == <i32>this.typeId, "Inherent: incorrectly encoded Inherent");
+        this.version = bytesReader.readInto<Byte>().unwrap();
         this.callIndex = bytesReader.readBytes(2);
-        this.prefix = bytesReader.readInto<Byte>().value;
+        this.prefix = bytesReader.readInto<Byte>().unwrap();
         this.arg = bytesReader.readInto<Arg>();
     }
     /**
      * @description Convert SCALE encoded bytes to an instance of Inherent
      */
-    static fromU8Array<Arg extends Codec>(input: u8[], index: i32 = 0): IExtrinsic{
+    static fromU8Array<Arg extends Codec>(input: u8[], index: i32 = 0): Extrinsic{
         const bytesReader = new BytesReader(input.slice(index));
-        const version = bytesReader.readInto<Byte>().value;
+        const version = bytesReader.readInto<Byte>().unwrap();
         const callIndex = bytesReader.readBytes(2);
-        const prefix = bytesReader.readInto<Byte>().value;
+        const prefix = bytesReader.readInto<Byte>().unwrap();
         const arg = bytesReader.readInto<Arg>();
         return new Inherent(callIndex, version, prefix, arg);
     }

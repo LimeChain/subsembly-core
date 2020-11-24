@@ -1,13 +1,12 @@
-import { ByteArray, Bytes, BytesReader, CompactInt } from 'as-scale-codec';
+import { Bytes, BytesReader, Codec, CompactInt } from 'as-scale-codec';
 import { Utils } from "../utils";
 import { DecodedData } from './decoded-data';
-import { IInherentData } from './interfaces';
 
 /**
  * @description Class representing InherentData transactions in Substrate runtime
  */
 
-export class InherentData implements IInherentData {
+export class InherentData<V extends Codec> implements Codec {
     
     /**
     * Length of the InherentIdentifier in InherentData
@@ -18,9 +17,9 @@ export class InherentData implements IInherentData {
      * A hashtable (Map, in our case) representing the totality of 
      * inherent extrinsics included in each block. 
      */
-    public data: Map<string, ByteArray>;
+    public data: Map<string, V>;
 
-    constructor(data: Map<string, ByteArray> = new Map<string, ByteArray>()){
+    constructor(data: Map<string, V> = new Map<string, V>()){
         let keys: string[] = data.keys();
         for (let i = 0; i < keys.length; i++){
             assert(keys[i].length == 8, "InherentData: Key length should be equal to 8!");
@@ -31,7 +30,7 @@ export class InherentData implements IInherentData {
     /**
      * @description Get data
      */
-    getData(): Map<string, ByteArray>{
+    getData(): Map<string, V>{
         return this.data;
     }
     /**
@@ -71,11 +70,11 @@ export class InherentData implements IInherentData {
     populateFromBytes(bytes: u8[], index: i32 = 0): void {
         const bytesReader = new BytesReader(bytes.slice(index));
         const lenComp = bytesReader.readInto<CompactInt>();
-        for(let i: i32 = 0; i < lenComp.value; i++){
+        for(let i: i32 = 0; i < lenComp.unwrap(); i++){
             const buff = new Uint8Array(InherentData.INHERENT_IDENTIFIER_LENGTH);
             Bytes.copyToTyped(bytesReader.readBytes(InherentData.INHERENT_IDENTIFIER_LENGTH), buff);
             let key: string =  String.UTF8.decode(buff.buffer);
-            let value: ByteArray = bytesReader.readInto<ByteArray>();
+            let value: V = bytesReader.readInto<V>();
             this.data.set(key, value);
         }
     }
@@ -83,20 +82,20 @@ export class InherentData implements IInherentData {
      * @description Creates a new instance of InherentData class from SCALE encoded array of bytes
      * @param input Takes SCALE encoded array of bytes as an argument
      */
-    static fromU8Array(input: u8[], index: i32 = 0): DecodedData<InherentData> {
-        const data: Map<string, ByteArray> = new Map<string, ByteArray>();
+    static fromU8Array<V extends Codec>(input: u8[], index: i32 = 0): DecodedData<InherentData<V>> {
+        const data: Map<string, V> = new Map<string, V>();
         const bytesReader = new BytesReader(input.slice(index));
         const lenComp = bytesReader.readInto<CompactInt>();
 
-        for (let i: i32 = 0; i<lenComp.value; i++){
+        for (let i: i32 = 0; i<lenComp.unwrap(); i++){
             const buff = new Uint8Array(InherentData.INHERENT_IDENTIFIER_LENGTH);
             Bytes.copyToTyped(bytesReader.readBytes(InherentData.INHERENT_IDENTIFIER_LENGTH), buff);
             let key: string =  String.UTF8.decode(buff.buffer);
-            let value: ByteArray = bytesReader.readInto<ByteArray>();
+            let value: V = bytesReader.readInto<V>();
             data.set(key, value);
         }
         const inherentData = new InherentData(data);
-        return new DecodedData<InherentData>(inherentData, input);
+        return new DecodedData<InherentData<V>>(inherentData, input);
     }
 
     /**
@@ -104,11 +103,10 @@ export class InherentData implements IInherentData {
      * @param a instance of InherentData
      * @param b Instance of InherentData
      */
-    @inline @operator('==')
-    static eq(a: InherentData, b: InherentData): bool {
+    eq(other: InherentData<V>): bool {
         let areEqual = true;
-        const aKeys = a.data.keys();
-        const bKeys = b.data.keys();
+        const aKeys = this.data.keys();
+        const bKeys = other.data.keys();
 
         if(aKeys.length != bKeys.length){
             return false;
@@ -127,8 +125,7 @@ export class InherentData implements IInherentData {
      * @param a instance of InherentData
      * @param b Instance of InherentData
      */
-    @inline @operator('!=')
-    static notEq(a: InherentData, b: InherentData): bool{
-        return !InherentData.eq(a, b);
+    notEq(other: InherentData<V>): bool{
+        return !this.eq(other);
     }
 }
