@@ -73,6 +73,25 @@ export class Inherent<Arg extends Codec> extends Extrinsic{
     }
 
     /**
+     * @description Checks if this instance is equal to other instance
+     * @param other 
+     */
+    eq(other: Inherent<Arg>): bool{
+        return this.callIndex == other.callIndex
+            && this.version == other.version
+            && this.prefix == other.prefix
+            && this.arg == other.arg;
+    }
+
+    /**
+     * @description Checks if this instance is not equal to other instance
+     * @param other 
+     */
+    notEq(other: Inherent<Arg>): bool{
+        return !this.eq(other);
+    }
+
+    /**
      * @description Converts to SCALE encoded bytes
      */
     toU8a(): u8[]{

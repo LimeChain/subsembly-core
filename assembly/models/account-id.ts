@@ -83,4 +83,14 @@ export class AccountId implements Codec {
         const accId = new AccountId(bytesReader.readBytes(AccountId.ADDRESS_LENGTH));
         return new DecodedData<AccountId>(accId, bytesReader.getLeftoverBytes());
     }
+
+    @inline @operator('==')
+    static eq(a: AccountId, b: AccountId): bool{
+        return a.eq(b);
+    }
+
+    @inline @operator('!=')
+    static notEq(a: AccountId, b: AccountId): bool{
+        return a.notEq(b);
+    }
 }

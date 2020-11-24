@@ -128,6 +128,25 @@ export class SignedTransaction<Address extends Codec, A extends Codec, N extends
     }
 
     /**
+     * @description Checks if this instance is equal to other instance
+     * @param other 
+     */
+    eq(other: SignedTransaction<Address, A, N, S>): bool{
+        return this.from == other.from 
+            && this.to == other.to
+            && this.amount == other.amount
+            && this.signature == other.signature;
+    }
+
+    /**
+     * @description Checks if this instance is not equal to other instance
+     * @param other 
+     */
+    notEq(other: SignedTransaction<Address, A, N, S>): bool{
+        return !this.eq(other);
+    }
+
+    /**
      * @description Non static constructor from bytes
      * @param bytes SCALE encoded bytes
      * @param index starting index

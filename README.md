@@ -33,7 +33,7 @@ subsembly
 
 ## Models
 
-Folder consists of commonly used types in Subsembly, such as, `Header`, `Extrinsic`, `Block`, etc. All the models implement Codec interface and have corresponding SCALE encoding and decoding methods. Additionaly, all the models have their own interface.
+Folder consists of commonly used types in Subsembly, such as, `Header`, `Extrinsic`, `Block`, etc. All the models implement Codec interface from [`as-scale-codec`](https://github.com/limechain/as-scale-codec) and have corresponding SCALE encoding and decoding methods.
 
 ## Modules
 

@@ -54,6 +54,9 @@ export abstract class Extrinsic implements Codec{
         return ext.getTypeId() == ExtrinsicType.Inherent;
     }
     
+    abstract eq(other: Extrinsic): bool;
+    abstract notEq(other: Extrinsic): bool;
+
     /**
      * @description Encoded byte length of the instance
      */
