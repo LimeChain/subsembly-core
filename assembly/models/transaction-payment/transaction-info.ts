@@ -1,4 +1,4 @@
-import { Codec, UnwrappableCodec } from "as-scale-codec";
+import { Codec } from "as-scale-codec";
 
 /**
  * @description Explicit enum to denote if a transaction pays fee or not.
@@ -18,7 +18,7 @@ export enum DispatchClass {
 }
 
 /**
- * A bundle of static information collected from the #[weight = $x] attributes.
+ * @description A bundle of static information collected from the #[weight = $x] attributes.
  */
 export class DispatchInfo<Weight extends Codec> {
     private _weight: Weight;
@@ -51,15 +51,16 @@ export class DispatchInfo<Weight extends Codec> {
      * Getter _weight
      * @return {Weight}
      */
-	public get weight() {
+	public get weight(): Weight {
 		return this._weight;
 	}
 }
 
 /**
- * Weight information that is only available post dispatch. NOTE: This can only be used to reduce the weight or fee, not increase it
+ * @description Weight information that is only available post dispatch. 
+ * NOTE: This can only be used to reduce the weight or fee, not increase it
  */
-export class PostDispatchInfo<Weight extends UnwrappableCodec<number>> {
+export class PostDispatchInfo<Weight extends Codec> {
     private _actualWeight: Weight;
     private _paysFee: Pays;
 
