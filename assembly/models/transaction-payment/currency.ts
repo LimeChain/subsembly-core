@@ -13,7 +13,7 @@ export enum WithdrawReasons {
     /// In order to tip a validator for transaction inclusion.
     TIP = 0b00010000
 
-}
+} 
 /**
  * Simple boolean for whether an account needs to be kept in existence.
  */
