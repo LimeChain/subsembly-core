@@ -13,4 +13,5 @@ export * from './runtime-version';
 export * from './signature';
 export * from './supported-apis';
 export * from './transaction-models';
+export * from './transaction-payment';
 

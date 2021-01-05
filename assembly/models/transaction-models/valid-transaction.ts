@@ -4,7 +4,7 @@ import { TransactionTag } from './transaction-tag';
 /**
  * @description Class representing ValidTransaction into Substrate runtime
  */
-export class ValidTransaction<A extends Codec>{
+export class ValidTransaction<A extends Codec, Nonce extends Codec>{
     /**
      * Priority determines the ordering of two transactions that have all
      * their dependencies satisfied
@@ -15,13 +15,13 @@ export class ValidTransaction<A extends Codec>{
      * A non-empty list signifies that some other transactions which 
      * provide given tags are required to be included before that one.
      */
-    public requires: TransactionTag<A>[];
+    public requires: TransactionTag<A, Nonce>[];
     /**
      * A list of tags this transaction provides. Successfully 
      * importing the transaction will enable other transactions 
      * that depend on (require) those tags to be included as well
      */
-    public provides: TransactionTag<A>[];
+    public provides: TransactionTag<A, Nonce>[];
     /**
      * Longevity describes minimum number of blocks the validity 
      * is correct. After this period transaction should be 
@@ -34,7 +34,7 @@ export class ValidTransaction<A extends Codec>{
     public propogate: Bool;
 
     constructor(
-        priority: UInt64, requires: TransactionTag<A>[], provides: TransactionTag<A>[], longevity: UInt64, propogate: Bool){
+        priority: UInt64, requires: TransactionTag<A, Nonce>[], provides: TransactionTag<A, Nonce>[], longevity: UInt64, propogate: Bool){
             this.priority = priority;
             this.requires = requires;
             this.provides = provides;

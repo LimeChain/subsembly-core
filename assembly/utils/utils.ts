@@ -1,4 +1,4 @@
-import { Codec, Hash, ScaleString } from 'as-scale-codec';
+import { Codec, CompactInt, Hash, ScaleString } from 'as-scale-codec';
 
 export namespace Utils {
     /**
@@ -60,5 +60,13 @@ export namespace Utils {
             result.concat(array[i].toU8a());
         }
         return result;
+    }
+
+    /**
+     * Encode length of the bytes
+     * @param value value to encode
+     */
+    export function encodeCompact(value: u8[]): u8[] {
+        return (new CompactInt(value.length)).toU8a().concat(value);
     }
 }

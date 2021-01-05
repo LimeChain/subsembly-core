@@ -1,9 +1,9 @@
-import { Codec, CompactInt, UInt64 } from 'as-scale-codec';
+import { Codec, CompactInt } from 'as-scale-codec';
 
 /**
  * @description Class representing TransactionTag to Substrate Runtime
  */
-export class TransactionTag<Address extends Codec>{
+export class TransactionTag<Address extends Codec, Nonce extends Codec>{
     /**
      * fixed byte length of the transaction tag
      */
@@ -15,9 +15,9 @@ export class TransactionTag<Address extends Codec>{
     /**
      * Nonce of the transaction
      */
-    public nonce: UInt64;
+    public nonce: Nonce;
 
-    constructor(sender: Address, nonce: UInt64){
+    constructor(sender: Address, nonce: Nonce){
         this.sender = sender;
         this.nonce = nonce;
     }
