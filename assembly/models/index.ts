@@ -9,9 +9,9 @@ export * from './header';
 export * from './inherent-data';
 export * from './option';
 export * from './response-codes';
-export * from './result';
 export * from './runtime-version';
 export * from './signature';
 export * from './supported-apis';
 export * from './transaction-models';
 export * from './transaction-payment';
+
