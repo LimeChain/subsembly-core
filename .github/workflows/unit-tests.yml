@@ -1,0 +1,12 @@
+name: Unit Tests
+
+on: [push]
+jobs:
+  runtime:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install AssemblyScript Dependencies
+      run: yarn install
+    - name: Run tests
+      run: yarn run test:ci

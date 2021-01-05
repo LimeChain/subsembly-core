@@ -1,6 +1,6 @@
 {
   "name": "subsembly-core",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "Framework for building AssemblyScript Substrate Runtimes",
   "main": "./assembly/index.ts",
   "scripts": {
