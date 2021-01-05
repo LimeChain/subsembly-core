@@ -69,8 +69,4 @@ export namespace Utils {
     export function encodeCompact(value: u8[]): u8[] {
         return (new CompactInt(value.length)).toU8a().concat(value);
     }
-
-    export function getEncodedLen(value: i32): i32 {
-        return (new CompactInt(value).encodedLength()) + value;
-    }
 }
