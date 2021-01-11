@@ -1,5 +1,4 @@
-import { BytesReader, Codec, UInt64 } from "as-scale-codec";
-import { Log } from "../../modules";
+import { BytesReader, Codec } from "as-scale-codec";
 
 function getTrailingZeros(num: u64): i32 {
     const binary = num.toString(2);
@@ -20,7 +19,7 @@ export class ExtrinsicEra implements Codec {
     private _period: u64;
     private _phase: u64;
 
-    constructor(type: Era = Era.Mortal, period: u64 = 0, phase: u64 = 0){
+    constructor(type: Era = Era.Immortal, period: u64 = 0, phase: u64 = 0){
         this._type = type;
         this._period = period;
         this._phase = phase;
@@ -46,6 +45,9 @@ export class ExtrinsicEra implements Codec {
             case Era.Mortal: {
                 return 2;
             }
+            default: {
+                return 1;
+            }
         }
     }
 
@@ -60,7 +62,10 @@ export class ExtrinsicEra implements Codec {
                 const encoded = <u64>Math.min(15 as f64, Math.max(1 as f64, (trailingZeros - 1) as f64)) + <u64>(((this.phase / quantizeFactor) << 4));
                 const first = <u8>(encoded >> 8);
                 const second = <u8>(encoded & 0xff);
-                return <u8[]>[first, second];
+                return <u8[]>[second, first];
+            }
+            default: {
+                return <u8[]>[0]
             }
         }
     }
@@ -85,18 +90,17 @@ export class ExtrinsicEra implements Codec {
         }
         else{
             const encoded: u64 = 
-                BytesReader.decodeInto<UInt64>(first).unwrap() + 
-                ((BytesReader.decodeInto<UInt64>(bytesReader.readBytes(1)).unwrap() << 8));
-            let period = 2 << (encoded % (1 << 4));
-            let quantizeFactor = <u64>Math.max((period >> 12) as f64, 1 as f64);
-            let phase = (encoded >> 4) * quantizeFactor;
+                <u64>(first[0]) + 
+                ((<u64>(bytesReader.readBytes(1)[0]) << 8));
+            let period: u64 = 2 << (encoded % <u64>(1 << 4));
+            let quantizeFactor: u64 = <u64>Math.max((period >> 12) as f64, 1 as f64);
+            let phase: u64 = (encoded >> 4) * quantizeFactor;
             if (period >= 4 && phase < period) {
                 this._type = Era.Mortal;
                 this._period = period;
                 this._phase = phase;
             }
             else {
-                Log.error("Era: Invalid period and phase!");
                 throw new Error();
             }
             return;

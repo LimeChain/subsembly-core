@@ -1,19 +1,19 @@
-import { BytesReader, Codec } from "as-scale-codec";
-import { AccountId } from "../account-id";
-import { Signature } from "../signature";
+import { Byte, BytesReader, Codec } from "as-scale-codec";
 import { SignedExtension } from "./signed-extension";
 
-export class ExtrinsicSignature implements Codec {
-    private _signer: AccountId;
-    private _signature: Signature;
+export class ExtrinsicSignature<Address extends Codec, S extends Codec> 
+    implements Codec {
+
+    private _signer: Address;
+    private _signature: S;
     private _signedExtension: SignedExtension;
     private _isEmpty: bool;
 
     constructor(
         isEmpty: bool = true,
-        signer: AccountId = new AccountId(),
-        signature: Signature = new Signature(),
-        signedExtension = new SignedExtension(),
+        signer: Address = instantiate<Address>(),
+        signature: S = instantiate<S>(),
+        signedExtension: SignedExtension = new SignedExtension(),
         )
     {
         this._signer = signer;
@@ -22,11 +22,11 @@ export class ExtrinsicSignature implements Codec {
         this._isEmpty = isEmpty;
     }
 
-    get signer(): AccountId {
+    get signer(): Address {
         return this._signer;
     }
 
-    get signature(): Signature {
+    get signature(): S {
         return this._signature;
     }
 
@@ -36,10 +36,6 @@ export class ExtrinsicSignature implements Codec {
 
     get isEmpty(): bool {
         return this._isEmpty;
-    }
-
-    set isEmpty(value: bool) {
-        this._isEmpty = value;
     }
 
     toU8a(): u8[] {
@@ -59,27 +55,20 @@ export class ExtrinsicSignature implements Codec {
 
     populateFromBytes(bytes: u8[], index: i32 = 0): void {
         const bytesReader = new BytesReader(bytes.slice(index));
-        const _EXTRINSIC_VERSION = bytesReader.readBytes(1);
-        if(_EXTRINSIC_VERSION[0] == 132) {
-            this._isEmpty = false;
-            this._signer = bytesReader.readInto<AccountId>();
-            this._signature = bytesReader.readInto<Signature>();
-            this._signedExtension = bytesReader.readInto<SignedExtension>();
-            return ;
-        }
-        else {
-            this._isEmpty = true;
-            return ;
-        }
+        this._isEmpty = false;
+        this._signer = bytesReader.readInto<Address>();
+        const _signature = bytesReader.readInto<Byte>().unwrap();
+        this._signature = bytesReader.readInto<S>();
+        this._signedExtension = bytesReader.readInto<SignedExtension>();
     }
 
-    eq(other: ExtrinsicSignature): bool {
+    eq(other: ExtrinsicSignature<Address, S>): bool {
         return this.signer.eq(other.signer)
             && this.signature.eq(other.signature)
             && this.signedExtension.eq(other.signedExtension);
     }
 
-    notEq(other: ExtrinsicSignature): bool {
+    notEq(other: ExtrinsicSignature<Address, S>): bool {
         return !this.eq(other);
     }
 }

@@ -5,7 +5,12 @@ import { Utils } from "../utils";
  * @description Class representing a Signature in the Substrate Runtime
  */
 export class Signature implements Codec {
-
+    public static readonly DEFAULT_SIGNATURE: u8[] = [
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
+    ];
     /**
      * Length of the bytes of a signature
      */
@@ -16,7 +21,7 @@ export class Signature implements Codec {
      */
     public value: u8[];
 
-    constructor(input: u8[] = []) {
+    constructor(input: u8[] = Signature.DEFAULT_SIGNATURE) {
         assert(input.length >= Signature.SIGNATURE_LENGTH, "Signature: input value must be atleast 64 bytes. EOF");
         this.value = new Array<u8>();
         this.value = this.value.concat(input);

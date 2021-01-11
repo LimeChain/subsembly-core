@@ -6,7 +6,10 @@ import { Utils } from "../utils";
  * @description Thin wrapper of SCALE Hash that represents Account ID (SS58)
  */
 export class AccountId implements Codec {
-
+    public static ALICE: u8[] = [
+        212,53,147,199,21,253,211,28,97,20,26,189,4,169,159,214,130,
+        44,133,88,133,76,205,227,154,86,132,231,165,109,162,125
+    ];
     /**
      * Length of Address in Bytes
      */
@@ -17,7 +20,7 @@ export class AccountId implements Codec {
      */
     private address: u8[];
 
-    constructor(bytes: u8[] = []) {
+    constructor(bytes: u8[] = AccountId.ALICE) {
         assert(bytes.length == AccountId.ADDRESS_LENGTH, "AccountId: invalid bytes length provided.");
         this.address = new Array<u8>();
         this.address = this.address.concat(bytes);
@@ -50,7 +53,7 @@ export class AccountId implements Codec {
      * @param index starting index
      */
     populateFromBytes(bytes: u8[], index: i32 = 0): void{
-        assert(bytes.length - index == AccountId.ADDRESS_LENGTH, "AccountId: invalid bytes length provided.");
+        assert(bytes.length - index >= AccountId.ADDRESS_LENGTH, "AccountId: invalid bytes length provided.");
         this.address = new Array<u8>();
         this.address = this.address.concat(bytes.slice(index, AccountId.ADDRESS_LENGTH));
     }

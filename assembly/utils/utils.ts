@@ -52,6 +52,18 @@ export namespace Utils {
     }
 
     /**
+     * Populate custom sized array of bytes
+     * @param size 
+     * @param byte 
+     */
+    export function getDefaultBytes(size: i32, byte: u8): u8[] {
+        const result: u8[] = [];
+        for (let i: i32 = 0; i<size; i++) {
+            result.push(byte);
+        }
+        return result;
+    }
+    /**
      * Converts Array of SCALE types into u8[]
      */
     export function arrayToU8a(array: Array<Codec>): u8[]{

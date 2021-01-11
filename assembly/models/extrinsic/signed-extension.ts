@@ -1,7 +1,7 @@
 import { BytesReader, Codec, CompactInt } from "as-scale-codec";
 import { ExtrinsicEra } from "./extrinsic-era";
 
-export class SignedExtension implements Codec {
+export class  SignedExtension implements Codec {
     private _era: ExtrinsicEra;
     private _tip: CompactInt;
     private _nonce: CompactInt;

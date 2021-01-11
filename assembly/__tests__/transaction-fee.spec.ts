@@ -21,8 +21,8 @@ describe("Weight to fee testing", () => {
             new WeightToFeeCoefficient(11, 0.5, false, 1),
             new WeightToFeeCoefficient(4, 0.3, true, 0)
         ];
-        const poly1 = new WeightToFeePolynomial<Balance>(coeffs);
-        expect<Balance>(poly1.calc<Weight>(instantiate<Weight>(1))).toStrictEqual(instantiate<Balance>(10));
+        const poly1 = new WeightToFeePolynomial<Balance>(coeffs1);
+        expect<Balance>(poly1.calc<Weight>(instantiate<Weight>(1))).toStrictEqual(instantiate<Balance>(1));
     })
 
 })
