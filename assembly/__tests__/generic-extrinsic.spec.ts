@@ -8,7 +8,7 @@ describe("Generic extrinsic tests", () => {
     it("should decode", () => {
         const auraAuth = BytesReader.decodeInto<UncheckedExtrinsic>(MockConstants.SIGNED_AURA_SLOT_DURATION);
         expect(auraAuth.isSigned()).toStrictEqual(true);
-        const signer = new AccountId(AccountId.ALICE);
+        const signer = new AccountId(MockConstants.ALICE);
         const signature = new Signature(MockConstants.SIGNATURE_SLOT_DURATION);
         const method = new Call([1, 0], []);
         const mortalEra = new ExtrinsicEra(Era.Mortal, 64, 0);

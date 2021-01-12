@@ -2,7 +2,7 @@ import { BytesReader, Codec, CompactInt } from "as-scale-codec";
 import { Utils } from "../../utils";
 
 /**
- * @description Class representing an Extrinsic in the Substrate Runtime
+ * @description Class representing a Transfer in the Substrate Runtime
  */
 export class Transfer<Address extends Codec, A extends Codec, N extends Codec> 
     implements Codec {
@@ -100,9 +100,10 @@ export class Transfer<Address extends Codec, A extends Codec, N extends Codec>
      * @param other 
      */
     eq(other: Transfer<Address, A, N>): bool{
-        return this.from == other.from 
-            && this.to == other.to
-            && this.amount == other.amount;
+        return this.from.eq(other.from) 
+            && this.to.eq(other.to)
+            && this.amount.eq(other.amount)
+            && this.nonce.eq(other.nonce);
     }
 
     /**
@@ -129,8 +130,8 @@ export class Transfer<Address extends Codec, A extends Codec, N extends Codec>
     }
 
     /**
-     * @description Instanciates new Extrinsic object from SCALE encoded byte array
-     * @param input - SCALE encoded Extrinsic
+     * @description Instanciates new Transfer object from SCALE encoded byte array
+     * @param input - SCALE encoded Transfer
      */
     static fromU8Array<Address extends Codec, A extends Codec, N extends Codec>(input: u8[], index: i32 = 0): Transfer<Address, A, N> {
         const bytesReader = new BytesReader(input.slice(index));

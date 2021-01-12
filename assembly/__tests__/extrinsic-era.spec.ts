@@ -1,4 +1,3 @@
-import { BytesReader } from "as-scale-codec";
 import { Era, ExtrinsicEra } from "../models";
 
 describe("ExtrinsicEra tests", () => {
@@ -8,9 +7,5 @@ describe("ExtrinsicEra tests", () => {
 
         const era1 = new ExtrinsicEra(Era.Mortal, 64, 19);
         expect<u8[]>(era1.toU8a()).toStrictEqual(<u8[]>([53, 1]));
-    })
-
-    it("should decode ExtrinsicEra", () => {
-        expect<bool>(BytesReader.decodeInto<ExtrinsicEra>([5, 0]).)
     })
 })
