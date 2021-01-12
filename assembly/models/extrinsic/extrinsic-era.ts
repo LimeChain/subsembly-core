@@ -1,5 +1,10 @@
 import { BytesReader, Codec } from "as-scale-codec";
 
+/**
+ * Gets trailing zeros of byte representation of the number
+ * @param num 
+ * @returns trailing zeros 
+ */
 function getTrailingZeros(num: u64): i32 {
     const binary = num.toString(2);
     let index: i32 = 0;
@@ -10,13 +15,37 @@ function getTrailingZeros(num: u64): i32 {
 }
 
 export enum Era {
+    /// The transaction is valid forever. The genesis hash must be present in the signed content.
     Immortal = 0,
+    /// Period and phase are encoded:
+	/// - The period of validity from the block hash found in the signing material.
+	/// - The phase in the period that this transaction's lifetime begins (and, importantly,
+	/// implies which block hash is included in the signature material). If the `period` is
+	/// greater than 1 << 12, then it will be a factor of the times greater than 1<<12 that
+	/// `period` is.
+	///
+	/// When used on `FRAME`-based runtimes, `period` cannot exceed `BlockHashCount` parameter
+	/// of `system` module.
     Mortal = 1
 }
 
+/**
+ * @description Represents Substrate's Era type
+ */
 export class ExtrinsicEra implements Codec {
+    /**
+     * Type  of extrinsic era
+     */
     private _type: Era;
-    private _period: u64;
+    
+    /**
+     * Period  of extrinsic era
+     */
+     private _period: u64;
+    
+     /**
+     * Phase  of extrinsic era
+     */
     private _phase: u64;
 
     constructor(type: Era = Era.Immortal, period: u64 = 0, phase: u64 = 0){
@@ -36,7 +65,11 @@ export class ExtrinsicEra implements Codec {
     get type(): Era {
         return this._type;
     }
-
+    
+    /**
+     * @description The length of Uint8Array when the value is encoded
+     * @returns length 
+     */
     encodedLength(): i32 {
         switch(this._type){
             case Era.Immortal: {
@@ -51,6 +84,10 @@ export class ExtrinsicEra implements Codec {
         }
     }
 
+    /**
+     * @description Encodes the value as a Uint8Array as per the SCALE specification
+     * @returns u8a 
+     */
     toU8a(): u8[] {
         switch(this._type) {
             case Era.Immortal: {
@@ -69,18 +106,31 @@ export class ExtrinsicEra implements Codec {
             }
         }
     }
-
+    
+    /**
+     * Checks if an instance is equal with other instance
+     * @param other other instance     
+     * @returns eq 
+     */
     eq(other: ExtrinsicEra): bool {
         return this.type == other.type 
             && this.period == other.period 
             && this.phase == other.phase;
     }
-
+    
+    /**
+     * Checks if an instance is not equal with other instance
+     * @param other other instance
+     */
     notEq(other: ExtrinsicEra): bool {
         return !this.eq(other);
     }
 
-
+    /**
+     * @description Non-static constructor method used to populate defined properties of the model
+     * @param bytes SCALE encoded bytes
+     * @param index index to start decoding the bytes from
+     */
     populateFromBytes(bytes: u8[], index: i32 = 0): void {
         const bytesReader = new BytesReader(bytes.slice(index));
         const first = bytesReader.readBytes(1);

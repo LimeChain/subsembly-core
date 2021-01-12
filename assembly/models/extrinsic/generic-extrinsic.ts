@@ -3,17 +3,32 @@ import { Utils } from "../../utils";
 import { TransactionTag, TransactionValidity, ValidTransaction } from "../transaction-models";
 import { Call } from "./call";
 import { ExtrinsicSignature } from "./extrinsic-signature";
-import { Transfer } from "./transfer";
 
+/**
+ * @description Source of the Transaction
+ */
 export enum TransactionSource {
     InBlock = 0,
     Local = 1,
     External = 2,
 }
 
+/**
+ * @description Represents Substrate's Extrinsic type
+ */
 export class GenericExtrinsic<Address extends Codec, B extends Codec, N extends Codec, S extends Codec> implements Codec {
+    /**
+     * Method  of generic extrinsic
+     */
     private _method: Call;
+    /**
+     * Signature  of generic extrinsic
+     */
     private _signature: ExtrinsicSignature<Address, S>;
+
+    /**
+     * Signing bit set constant
+     */
     static readonly SIGNING_BIT_SET: u8 = 132;
 
     constructor(
@@ -40,30 +55,29 @@ export class GenericExtrinsic<Address extends Codec, B extends Codec, N extends 
             .concat(this.signature.signedExtension.toU8a());
     }
 
+    /**
+     * @description Determines whether the extrinsic is signed
+     * @returns signed 
+     */
     isSigned(): bool {
         return !this.signature.isEmpty;
     }
 
-    asTransfer(): Transfer<Address, B, N> {
-        const bytesReader = new BytesReader(this.method.args);
-        const receiver = bytesReader.readInto<Address>();
-        const value = bytesReader.readInto<B>();
-        const compactNonce = this.signature.signedExtension.nonce;
-        const nonce = instantiate<N>(<u32>compactNonce.unwrap());
-        return new Transfer(
-            this.signature.signer,
-            receiver,
-            value,
-            nonce
-        );
-    }
-
+    /**
+     * @description Encodes the value as a Uint8Array as per the SCALE specification
+     * @returns u8a 
+     */
     toU8a(): u8[] {
         let encoded: u8[] = this.signature.toU8a()
             .concat(this.method.toU8a())
         return Utils.encodeCompact(encoded);
     }
 
+    /**
+     * @description Non-static constructor method used to populate defined properties of the model
+     * @param bytes SCALE encoded bytes
+     * @param index index to start decoding the bytes from
+     */
     populateFromBytes(bytes: u8[], index: i32 = 0): void {
         const bytesReader = new BytesReader(bytes.slice(index));
         const _len = bytesReader.readInto<CompactInt>();
@@ -80,18 +94,34 @@ export class GenericExtrinsic<Address extends Codec, B extends Codec, N extends 
         }
     }
 
+    /**
+     * @description The length of Uint8Array when the value is encoded
+     */
     encodedLength(): i32 {
         return this.toU8a().length;
     }
 
+    /**
+     * Checks if an instance is equal with other instance
+     * @param other other instance     
+    */
     eq(other: GenericExtrinsic<Address, B, N, S>): bool {
         return this.signature.eq(other.signature) && this.method.eq(other.method);
     }
 
+    /**
+     * Checks if an instance is not equal with other instance
+     * @param other other instance
+     */
     notEq(other: GenericExtrinsic<Address, B, N, S>): bool {
         return !this.eq(other);
     }
 
+    /**
+     * @description Validate this extrinsic instance
+     * @param _source 
+     * @returns ValidTransaction instance
+     */
     validate(_source: TransactionSource): ValidTransaction<Address, N> {
         const from = this.signature.signer;
         const nonce = instantiate<N>(<u32>this.signature.signedExtension.nonce.unwrap());
@@ -112,6 +142,10 @@ export class GenericExtrinsic<Address extends Codec, B extends Codec, N extends 
         );
     }
 
+    /**
+     * @description Validate unsigned transaction
+     * @returns TransactionValidity instance
+     */
     validateUnsigned(): TransactionValidity {
         return new TransactionValidity(
             true, [], "Valid transaction"
