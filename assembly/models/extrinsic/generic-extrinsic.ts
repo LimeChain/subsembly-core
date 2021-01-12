@@ -49,7 +49,7 @@ export class GenericExtrinsic<Address extends Codec, B extends Codec, N extends 
         const receiver = bytesReader.readInto<Address>();
         const value = bytesReader.readInto<B>();
         const compactNonce = this.signature.signedExtension.nonce;
-        const nonce = instantiate<N>(compactNonce.unwrap());
+        const nonce = instantiate<N>(<u32>compactNonce.unwrap());
         return new Transfer(
             this.signature.signer,
             receiver,
@@ -94,7 +94,7 @@ export class GenericExtrinsic<Address extends Codec, B extends Codec, N extends 
 
     validate(_source: TransactionSource): ValidTransaction<Address, N> {
         const from = this.signature.signer;
-        const nonce = instantiate<N>(this.signature.signedExtension.nonce.unwrap());
+        const nonce = instantiate<N>(<u32>this.signature.signedExtension.nonce.unwrap());
         /**
          * If all the validations are passed, construct validTransaction instance
          */
