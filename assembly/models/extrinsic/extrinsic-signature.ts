@@ -60,9 +60,8 @@ export class ExtrinsicSignature<Address extends Codec, S extends Codec>
         if(this.isEmpty){
             return [];
         }
-        const EXTRINSIC_VERSION: u8[] = [132];
         const LOOKUP: u8[] = [1];
-        return EXTRINSIC_VERSION.concat(this.signer.toU8a())
+        return this.signer.toU8a()
             .concat(LOOKUP)
             .concat(this.signature.toU8a())
             .concat(this.signedExtension.toU8a());

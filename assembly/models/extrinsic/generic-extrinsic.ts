@@ -31,6 +31,11 @@ export class GenericExtrinsic<Address extends Codec, B extends Codec, N extends 
      */
     static readonly SIGNING_BIT_SET: u8 = 132;
 
+    /**
+     * Api version for unsigned extrinsic
+     */
+    static readonly API_VERSION: u8 = 4;
+
     constructor(
         method: Call = new Call(), 
         signature: ExtrinsicSignature<Address, S> = new ExtrinsicSignature())
@@ -68,8 +73,9 @@ export class GenericExtrinsic<Address extends Codec, B extends Codec, N extends 
      * @returns u8a 
      */
     toU8a(): u8[] {
-        let encoded: u8[] = this.signature.toU8a()
-            .concat(this.method.toU8a())
+        const EXTRINSIC_VERSION: u8[] = [132];
+        let encoded: u8[] = this.isSigned() ? EXTRINSIC_VERSION.concat(this.signature.toU8a())
+            .concat(this.method.toU8a()) : [GenericExtrinsic.API_VERSION].concat(this.method.toU8a());
         return Utils.encodeCompact(encoded);
     }
 
