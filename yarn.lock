@@ -7,10 +7,10 @@
   resolved "https://registry.yarnpkg.com/@as-pect/assembly/-/assembly-4.0.0.tgz#88caa5d3b3fc72778d69e2dbc930f96cc810899d"
   integrity sha512-xkyyWlpOnD7n01bJQivKAePAvg7D4eygp72BgzRfvZxTTTtGDfLU1jwB5gZr8XX5bFkpF/+W5lk/Uqt5LLchWA==
 
-"@as-pect/assembly@^5.0.0":
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/@as-pect/assembly/-/assembly-5.0.0.tgz#aa85efbedb93ea79f7236769bd96e3ba7824189e"
-  integrity sha512-tFPFxBCyiC4vMqZHxanhIxJL9nX7TqUCa91aty1poFGwyfbLr5/XEVnPRTwfTn8pNEtcfJ99lTjUDdYxhmv8qA==
+"@as-pect/assembly@^5.0.1":
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/@as-pect/assembly/-/assembly-5.0.1.tgz#052bb0082db81ec11c4756312ab182ec6eda3025"
+  integrity sha512-8tkBALZa8jjUmBoz67gRyl8X501IWzkyRl7rxIcJq6HycudlmL8zfxtZL4x70gtvK4nDcb885FmrnnknH5L+hQ==
 
 "@as-pect/cli@^4.0.0":
   version "4.0.0"
@@ -25,18 +25,18 @@
     "@as-pect/csv-reporter" "^4.0.0"
     "@as-pect/json-reporter" "^4.0.0"
 
-"@as-pect/cli@^5.0.0":
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/@as-pect/cli/-/cli-5.0.0.tgz#83325bad5fcd813f7e07f91cfff8b99595378216"
-  integrity sha512-gpS/Zt1NBN2O1zvhbqQwXiu6hmAQxhPubdFkWWVmQamcHy42uDVdUesqmHwSQTOSBtTSTYHFK4GJbg6yipUbEA==
+"@as-pect/cli@^5.0.1":
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/@as-pect/cli/-/cli-5.0.1.tgz#2f66026aac759c837048dfd43cdf94c332a64aef"
+  integrity sha512-ceQFmeBpBqqbs8yJnyG2ZRfyaOUg8df7UFjoX8d++rlMOLHW0ZP/QByXZgmCpYo1aLP1wwvB2so6zUj2NeWECw==
   dependencies:
-    "@as-pect/assembly" "^5.0.0"
-    "@as-pect/core" "^5.0.0"
+    "@as-pect/assembly" "^5.0.1"
+    "@as-pect/core" "^5.0.1"
     chalk "^4.1.0"
     glob "^7.1.6"
   optionalDependencies:
-    "@as-pect/csv-reporter" "^5.0.0"
-    "@as-pect/json-reporter" "^5.0.0"
+    "@as-pect/csv-reporter" "^5.0.1"
+    "@as-pect/json-reporter" "^5.0.1"
 
 "@as-pect/core@^4.0.0":
   version "4.0.0"
@@ -48,13 +48,13 @@
     chalk "^4.1.0"
     long "^4.0.0"
 
-"@as-pect/core@^5.0.0":
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/@as-pect/core/-/core-5.0.0.tgz#0126843e6cb5792537102aafddbcb9f7832364e9"
-  integrity sha512-uTtOSVXfoJyAQA6Gp+sYTzGHq/XSK31/OHNR8lpT6KkpZ0ij5B1RrqcpoVU29MF/PujOihmXxXqr6o86rz5Oqw==
+"@as-pect/core@^5.0.1":
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/@as-pect/core/-/core-5.0.1.tgz#eab6d5a578c963d163ec43626e926d96a8ec294e"
+  integrity sha512-xG9UPngMZSXqfrvmRaeLuM/HVGsXQ1ftCuAqcBfx4HSoCEfrvda0XchEwO7ftWSuNv2tkfBscANGn4vOEjBcMg==
   dependencies:
-    "@as-pect/assembly" "^5.0.0"
-    "@as-pect/snapshots" "^5.0.0"
+    "@as-pect/assembly" "^5.0.1"
+    "@as-pect/snapshots" "^5.0.1"
     chalk "^4.1.0"
     long "^4.0.0"
 
@@ -65,12 +65,12 @@
   dependencies:
     "@as-pect/core" "^4.0.0"
 
-"@as-pect/csv-reporter@^5.0.0":
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/@as-pect/csv-reporter/-/csv-reporter-5.0.0.tgz#bbbf29a9615aa78206596a02ffb13e9496fc7f95"
-  integrity sha512-I/JBRtxGeGLdAN4WeDMBNkmgTRebAyuQBzPjcYOca4dqCgT3BlfDnL+iZeVt9vcJUXxUqaXidRvFYqNJnG+UMQ==
+"@as-pect/csv-reporter@^5.0.1":
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/@as-pect/csv-reporter/-/csv-reporter-5.0.1.tgz#9eb2b3fbdd659306762cfdfbd0177127dd5d835f"
+  integrity sha512-XbzbVqXrB7Wds5yYgWiqFe9fNnYMZJQRdZafd7iETlkHhhfZgtYvLbYsdJfMeLMZSdhKInA91y+GkDi0fHEmDQ==
   dependencies:
-    "@as-pect/core" "^5.0.0"
+    "@as-pect/core" "^5.0.1"
 
 "@as-pect/json-reporter@^4.0.0":
   version "4.0.0"
@@ -79,12 +79,12 @@
   dependencies:
     "@as-pect/core" "^4.0.0"
 
-"@as-pect/json-reporter@^5.0.0":
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/@as-pect/json-reporter/-/json-reporter-5.0.0.tgz#0295bd04212ba6ee18ce45bdc074b4d50379317c"
-  integrity sha512-3FGmSqKbHTWL9Aj5iYT/T64NLVg9WR+NoFNfGaRnIXVCsmHZ/9Ee1CXGqGZrcAh586VZskhqvYZKZ+rD79X3OQ==
+"@as-pect/json-reporter@^5.0.1":
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/@as-pect/json-reporter/-/json-reporter-5.0.1.tgz#c594773e867ad50f7958e6259a3d35855bcb1476"
+  integrity sha512-pE3GFihSSgNCSVvJtOWJiZfzIOARALPj/U3c5j5D9ZcCG8N1lb/Ge2doOEb9cuVpVKymi5+e6+GCH8+PU3W5bA==
   dependencies:
-    "@as-pect/core" "^5.0.0"
+    "@as-pect/core" "^5.0.1"
 
 "@as-pect/snapshots@^4.0.0":
   version "4.0.0"
@@ -94,13 +94,13 @@
     diff "^4.0.2"
     nearley "^2.19.3"
 
-"@as-pect/snapshots@^5.0.0":
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/@as-pect/snapshots/-/snapshots-5.0.0.tgz#e888dde1f9d47631c45b48da79b574d22032c0fa"
-  integrity sha512-2HQH4w9d32ZnNF7HKVTiYQHsMgPV2+FRnhVE13qhm5BsBrrNkHVlJODdKhMXTg5HovITA4azZSu2A/ZQV7Mmjw==
+"@as-pect/snapshots@^5.0.1":
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/@as-pect/snapshots/-/snapshots-5.0.1.tgz#7945db8ce5a771699658febe0cf20454afda6c35"
+  integrity sha512-+fQbJ2FfYcILPphKILFQmxf9Fbck4TmmQTLEJS0MbIv3tt2LeyTk5n8y/+JMAQ3pTb029EJjjAX8g1b83cCVig==
   dependencies:
     diff "^5.0.0"
-    nearley "^2.19.9"
+    nearley "^2.20.1"
 
 "@assemblyscript/loader@^0.16.1":
   version "0.16.1"
@@ -124,10 +124,10 @@ as-bignum@^0.2.6:
   resolved "https://registry.yarnpkg.com/as-bignum/-/as-bignum-0.2.6.tgz#2462357874395e940eebe9a05f8eaef9d5cb88f3"
   integrity sha512-3FNvNp23mmfkhxDJekO8hcjC49jKkvCD1MKYjr/wk7tTiCgdpM+oSfzeFk+Ce8iZtIKXGWARbDjcs4XGmtnyAA==
 
-as-scale-codec@^0.2.1:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/as-scale-codec/-/as-scale-codec-0.2.1.tgz#0e864a07b9b10cfed59edc5eede2da577a322a78"
-  integrity sha512-kK1bmbHyY8o4dt2RLQbsYZ1Ef4D998jvJFNAphe+fbY2uGWiAohuYvE6Z4WDSjr9vPI5eMsXwACjdEp48JGTGQ==
+as-scale-codec@^0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/as-scale-codec/-/as-scale-codec-0.2.2.tgz#82d8bcfbb2c910811a2309bf4325e38609b21f6b"
+  integrity sha512-IbzNSupYNGbvbQf2+pCkzcNHYCbPfKRSipRuumdJ7PONk6MbaK60KXoDYV5cgAJ3y094Iz+qva6IRVdATd/FWw==
   dependencies:
     "@as-pect/assembly" "^4.0.0"
     "@as-pect/cli" "^4.0.0"
@@ -283,7 +283,7 @@ nearley@^2.19.3:
     randexp "0.4.6"
     semver "^5.4.1"
 
-nearley@^2.19.9:
+nearley@^2.20.1:
   version "2.20.1"
   resolved "https://registry.yarnpkg.com/nearley/-/nearley-2.20.1.tgz#246cd33eff0d012faf197ff6774d7ac78acdd474"
   integrity sha512-+Mc8UaAebFzgV+KpI5n7DasuuQCHA89dmwm7JXw3TV43ukfNQ9DnBH3Mdb2g/I4Fdxc26pwimBWvjIw0UAILSQ==

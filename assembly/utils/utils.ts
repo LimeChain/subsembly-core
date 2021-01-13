@@ -50,7 +50,7 @@ export namespace Utils {
         hashBytes.fill(byte);
         return Hash.fromU8a(hashBytes);
     }
-
+    
     /**
      * Converts Array of SCALE types into u8[]
      */
