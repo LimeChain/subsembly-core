@@ -1,10 +1,14 @@
-# Subsembly-Core
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+<p align="center">
+  <img src="./images/logo.svg">
+</p>
 
-The project is funded by [Web3 Foundation](https://web3.foundation/) via their [General Grants Program](https://github.com/w3f/General-Grants-Program) 🙏
-![WEB3 Badge](./web3_badge_black.png)
+<div align="center">
 
-This is the core library of Subsembly framework used for developing Substrate runtimes in AssemblyScript. The project is work in progress.
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) ![Unit Tests](https://github.com/LimeChain/subsembly-core/workflows/Unit%20Tests/badge.svg)
+
+</div>
+
+This is the core library of [Subsembly framework](https://github.com/LimeChain/subsembly) used for developing Substrate runtimes in AssemblyScript.
 
 ## Usage
 
@@ -43,3 +47,7 @@ Folder consists of commonly used modules inside Subsembly runtime. For instance,
 
 Folder consists of commonly used utility functions in Subsembly. For instance, it includes methods for serialising and deserialising data incoming from the Host.
 
+## Funding 
+
+The project is funded by [Web3 Foundation](https://web3.foundation/) via their [General Grants Program](https://github.com/w3f/General-Grants-Program) 🙏
+![WEB3 Badge](./images/web3_badge_black.png)
