@@ -93,7 +93,8 @@ export class ExtrinsicSignature<Address extends Codec, S extends Codec>
      * @param other other instance     
     */
     eq(other: ExtrinsicSignature<Address, S>): bool {
-        return this.signer.eq(other.signer)
+        return this.isEmpty == other.isEmpty
+            && this.signer.eq(other.signer)
             && this.signature.eq(other.signature)
             && this.signedExtension.eq(other.signedExtension);
     }
