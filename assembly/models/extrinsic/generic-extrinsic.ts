@@ -1,6 +1,6 @@
-import { Bool, Byte, BytesReader, Codec, CompactInt, UInt64 } from "as-scale-codec";
+import { Bool, Byte, BytesReader, Codec, CompactInt, Hash, UInt32, UInt64 } from "as-scale-codec";
 import { Utils } from "../../utils";
-import { TransactionTag, TransactionValidity, ValidTransaction } from "../transaction-models";
+import { TransactionTag, ValidTransaction } from "../transaction-models";
 import { Call } from "./call";
 import { ExtrinsicSignature } from "./extrinsic-signature";
 
@@ -55,9 +55,13 @@ export class GenericExtrinsic<Address extends Codec, B extends Codec, N extends 
     /**
      * @description The payload being signed in transactions.
      */
-    getPayload(): u8[] {
+    createPayload(blockHash: Hash, genesisHash: Hash, specVersion: UInt32, transactionVersion: UInt32): u8[] {
         return this.method.toU8a()
-            .concat(this.signature.signedExtension.toU8a());
+            .concat(this.signature.signedExtension.toU8a())
+            .concat(transactionVersion.toU8a())
+            .concat(specVersion.toU8a())
+            .concat(genesisHash.toU8a())
+            .concat(blockHash.toU8a());
     }
 
     /**
@@ -134,7 +138,7 @@ export class GenericExtrinsic<Address extends Codec, B extends Codec, N extends 
         /**
          * If all the validations are passed, construct validTransaction instance
          */
-        const priority: UInt64 = new UInt64(this.getPayload().length);
+        const priority: UInt64 = new UInt64(this.method.encodedLength() + this.signature.signedExtension.encodedLength());
         const requires: TransactionTag<Address, N>[] = [];
         const provides: TransactionTag<Address, N>[] = [new TransactionTag(from, nonce)];
         const longevity: UInt64 = new UInt64(64);
@@ -152,9 +156,24 @@ export class GenericExtrinsic<Address extends Codec, B extends Codec, N extends 
      * @description Validate unsigned transaction
      * @returns TransactionValidity instance
      */
-    validateUnsigned(): TransactionValidity {
-        return new TransactionValidity(
-            true, [], "Valid transaction"
+    validateUnsigned(auth: Address, nonce: N): ValidTransaction<Address, N> {
+        /**
+         * Return default ValidTransaction instance
+         */
+        const priority: UInt64 = new UInt64(this.method.encodedLength());
+        const requires: TransactionTag<Address, N>[] = [];
+        const provides: TransactionTag<Address, N>[] = [new TransactionTag<Address, N>(auth, nonce)];
+        const longevity: UInt64 = new UInt64(64);
+        const propogate: Bool = new Bool(true);
+        return new ValidTransaction<Address, N>(
+            priority,
+            requires,
+            provides,
+            longevity,
+            propogate
         );
     }
 }
+
+0x0801006500000001000000010000000b6b9025f9912cd76f457e01d3eaacf14ded6326bd51366b65482cd3048f9626916daf5cc8231d4abaafc651e9d77b6d0ed99d355dce2c21d13beaf455cc7ae1
+0x010065000000010000000100000020febb9aa05e16134f17e12329ebb31d36850dcd77e19674b56d88416ddee86c916daf5cc8231d4abaafc651e9d77b6d0ed99d355dce2c21d13beaf455cc7ae1

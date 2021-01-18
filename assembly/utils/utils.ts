@@ -1,4 +1,5 @@
-import { Codec, CompactInt, Hash, ScaleString } from 'as-scale-codec';
+import { ByteArray, Codec, CompactInt, Hash, ScaleString } from 'as-scale-codec';
+import { Hashing } from '..';
 
 export namespace Utils {
     /**
@@ -68,5 +69,23 @@ export namespace Utils {
      */
     export function encodeCompact(value: u8[]): u8[] {
         return (new CompactInt(value.length)).toU8a().concat(value);
+    }
+
+    /**
+     * Convert any Codec instance to hex string
+     * @param value Codec instance
+     */
+    export function toHexString(value: u8[]): string {
+        return new ByteArray(value).toHexString();
+    }
+
+    export function getHashedKey(prefix: string, key: string, suffix: Codec | null): u8[] {
+        const prefixU8a = Utils.stringsToBytes([prefix], false);
+        const hashedPrefix = Hashing.twoX128(prefixU8a);
+        const keyU8a = Utils.stringsToBytes([key], false);
+        const hashedKey = Hashing.twoX128(keyU8a);
+        const hashedSuffix = suffix ? Hashing.twoX128(suffix.toU8a()) : [];
+        return hashedPrefix.concat(hashedKey)
+            .concat(hashedSuffix);
     }
 }

@@ -4,6 +4,58 @@ import { Utils } from "../utils";
 import { Constants } from "./constants";
 
 /**
+ * @description A phase of a block's execution.
+ */
+export enum ExecutionPhase {
+    /// Applying an extrinsic.
+	ApplyExtrinsic = 0,
+	/// Finalizing the block.
+	Finalization = 1,
+	/// Initializing the block.
+	Initialization = 2,
+}
+
+/**
+ * @description Codec implementation of Phase
+ */
+export class Phase implements Codec {
+    private _phase: ExecutionPhase;
+
+    constructor(phase: ExecutionPhase) {
+        this._phase = phase;
+    }
+
+    toU8a(): u8[] {
+        return [<u8>this._phase];
+    }
+
+    populateFromBytes(bytes: u8[], index: i32 = 0): void {
+        switch(bytes[0]) {
+            case ExecutionPhase.ApplyExtrinsic: 
+                this._phase = ExecutionPhase.ApplyExtrinsic;
+            case ExecutionPhase.Finalization:
+                this._phase = ExecutionPhase.Finalization;
+            case ExecutionPhase.Initialization:
+                this._phase = ExecutionPhase.Initialization;
+            default:
+                this._phase = ExecutionPhase.Initialization;
+        }
+    }
+
+    encodedLength(): i32 {
+        return 1;
+    }
+
+    eq(other: Phase): bool {
+        return this._phase == other._phase;
+    } 
+
+    notEq(other: Phase): bool {
+        return !this.eq(other);
+    }
+}
+
+/**
  * @description Class representing a Block into the Substrate Runtime
  */
 export class Block<H extends Codec, E extends Codec> implements Codec{

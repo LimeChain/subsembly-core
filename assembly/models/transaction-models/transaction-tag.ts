@@ -1,4 +1,5 @@
-import { Codec, CompactInt } from 'as-scale-codec';
+import { Codec } from 'as-scale-codec';
+import { Utils } from '../../utils';
 
 /**
  * @description Class representing TransactionTag to Substrate Runtime
@@ -26,11 +27,8 @@ export class TransactionTag<Address extends Codec, Nonce extends Codec>{
      * @description Converts to SCALE encoded bytes
      */
     toU8a(): u8[]{
-        const lenCompact = new CompactInt(TransactionTag.TAG_LEN);
-        const res: u8[] = lenCompact.toU8a();
         const tagU8a: u8[] = this.sender.toU8a()
             .concat(this.nonce.toU8a())
-            .slice(0, TransactionTag.TAG_LEN);
-        return res.concat(tagU8a);
+        return Utils.encodeCompact(tagU8a);
     }
 }
