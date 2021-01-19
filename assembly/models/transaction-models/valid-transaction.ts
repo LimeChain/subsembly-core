@@ -34,7 +34,12 @@ export class ValidTransaction<A extends Codec, Nonce extends Codec>{
     public propogate: Bool;
 
     constructor(
-        priority: UInt64, requires: TransactionTag<A, Nonce>[], provides: TransactionTag<A, Nonce>[], longevity: UInt64, propogate: Bool){
+        priority: UInt64 = new UInt64(0), 
+        requires: TransactionTag<A, Nonce>[] = [], 
+        provides: TransactionTag<A, Nonce>[] = [], 
+        longevity: UInt64 = new UInt64(u64.MAX_VALUE), 
+        propogate: Bool = new Bool(true))
+    {
             this.priority = priority;
             this.requires = requires;
             this.provides = provides;

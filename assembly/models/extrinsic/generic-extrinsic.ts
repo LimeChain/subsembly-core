@@ -156,18 +156,7 @@ export class GenericExtrinsic<Address extends Codec, B extends Codec, N extends 
      * @description Validate unsigned transaction
      * @returns TransactionValidity instance
      */
-    validateUnsigned(auth: Address, nonce: N): ValidTransaction<Address, N> {
-        const priority: UInt64 = new UInt64(this.method.encodedLength());
-        const requires: TransactionTag<Address, N>[] = [];
-        const provides: TransactionTag<Address, N>[] = [new TransactionTag<Address, N>(auth, nonce)];
-        const longevity: UInt64 = new UInt64(64);
-        const propogate: Bool = new Bool(true);
-        return new ValidTransaction<Address, N>(
-            priority,
-            requires,
-            provides,
-            longevity,
-            propogate
-        );
+    validateUnsigned(source: TransactionSource = TransactionSource.InBlock, call: Call = new Call()): ValidTransaction<Address, N> {
+        return new ValidTransaction<Address, N>();
     }
 }

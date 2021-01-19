@@ -31,6 +31,18 @@ export class RuntimeDispatchInfo<Balance extends Codec, Weight extends Codec> {
         this._partialFee = partialFee;
     }
 
+    get weight(): Weight {
+        return this._weight;
+    }
+
+    get klass(): DispatchClass {
+        return this._klass;
+    }
+
+    get partialFee(): Balance {
+        return this._partialFee;
+    }
+ 
     toU8a(): u8[] {
         return this._weight.toU8a()
             .concat([this._klass as u8])
