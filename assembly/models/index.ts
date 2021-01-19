@@ -1,5 +1,6 @@
 export * from './account-data';
 export * from './account-id';
+export * from './account-info';
 export * from './block';
 export * from './decoded-data';
 export * from './digest-items';

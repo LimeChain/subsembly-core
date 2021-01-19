@@ -4,6 +4,67 @@ import { Utils } from "../utils";
 import { Constants } from "./constants";
 
 /**
+ * @description A phase of a block's execution.
+ */
+export enum ExecutionPhase {
+    /// Applying an extrinsic.
+	ApplyExtrinsic = 0,
+	/// Finalizing the block.
+	Finalization = 1,
+	/// Initializing the block.
+	Initialization = 2,
+}
+
+/**
+ * @description Codec implementation of Phase
+ */
+export class Phase<Arg extends Codec> implements Codec {
+    private _phase: ExecutionPhase;
+    private _arg: Arg;
+
+    constructor(phase: ExecutionPhase = ExecutionPhase.Initialization, arg: Arg = instantiate<Arg>(0)) {
+        this._phase = phase;
+        this._arg = arg;
+    }
+
+    toU8a(): u8[] {
+        if(this._phase == ExecutionPhase.ApplyExtrinsic) {
+            return [<u8>this._phase].concat(this._arg.toU8a());
+        }
+        return [<u8>this._phase];
+    }
+
+    populateFromBytes(bytes: u8[], index: i32 = 0): void {
+        switch(bytes[index]) {
+            case ExecutionPhase.ApplyExtrinsic: 
+                this._phase = ExecutionPhase.ApplyExtrinsic;
+                this._arg = BytesReader.decodeInto<Arg>(bytes.slice(index + 1));
+            case ExecutionPhase.Finalization:
+                this._phase = ExecutionPhase.Finalization;
+            case ExecutionPhase.Initialization:
+                this._phase = ExecutionPhase.Initialization;
+            default:
+                this._phase = ExecutionPhase.Initialization;
+        }
+    }
+
+    encodedLength(): i32 {
+        if(this._phase == ExecutionPhase.ApplyExtrinsic) {
+            return 1 + this._arg.encodedLength();
+        }
+        return 1;
+    }
+
+    eq(other: Phase<Arg>): bool {
+        return this._phase == other._phase;
+    } 
+
+    notEq(other: Phase<Arg>): bool {
+        return !this.eq(other);
+    }
+}
+
+/**
  * @description Class representing a Block into the Substrate Runtime
  */
 export class Block<H extends Codec, E extends Codec> implements Codec{

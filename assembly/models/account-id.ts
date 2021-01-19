@@ -50,7 +50,7 @@ export class AccountId implements Codec {
     populateFromBytes(bytes: u8[], index: i32 = 0): void{
         assert(bytes.length - index >= AccountId.ADDRESS_LENGTH, "AccountId: invalid bytes length provided.");
         this.address = new Array<u8>();
-        this.address = this.address.concat(bytes.slice(index, AccountId.ADDRESS_LENGTH));
+        this.address = this.address.concat(bytes.slice(index, index + AccountId.ADDRESS_LENGTH));
     }
 
     /**

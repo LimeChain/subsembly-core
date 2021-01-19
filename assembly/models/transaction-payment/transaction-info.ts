@@ -18,6 +18,40 @@ export enum DispatchClass {
 }
 
 /**
+ * @description Information related to a dispatchable's class, weight, and fee that can be queried from the runtime.
+ */
+export class RuntimeDispatchInfo<Balance extends Codec, Weight extends Codec> {
+    private _weight: Weight;
+    private _klass: DispatchClass;
+    private _partialFee: Balance;
+
+    constructor(weight: Weight, klass: DispatchClass, partialFee: Balance) {
+        this._weight = weight;
+        this._klass = klass;
+        this._partialFee = partialFee;
+    }
+
+    get weight(): Weight {
+        return this._weight;
+    }
+
+    get klass(): DispatchClass {
+        return this._klass;
+    }
+
+    get partialFee(): Balance {
+        return this._partialFee;
+    }
+ 
+    toU8a(): u8[] {
+        return this._weight.toU8a()
+            .concat([this._klass as u8])
+            .concat(this._partialFee.toU8a());
+    
+    }
+}
+
+/**
  * @description A bundle of static information collected from the #[weight = $x] attributes.
  */
 export class DispatchInfo<Weight extends Codec> {
@@ -53,7 +87,13 @@ export class DispatchInfo<Weight extends Codec> {
      */
 	public get weight(): Weight {
 		return this._weight;
-	}
+    }
+    
+    toU8a(): u8[] {
+        return this.weight.toU8a()
+            .concat([this.klass as u8])
+            .concat([this.paysFee as u8]);
+    }
 }
 
 /**
