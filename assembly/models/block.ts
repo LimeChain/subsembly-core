@@ -18,21 +18,27 @@ export enum ExecutionPhase {
 /**
  * @description Codec implementation of Phase
  */
-export class Phase implements Codec {
+export class Phase<Arg extends Codec> implements Codec {
     private _phase: ExecutionPhase;
+    private _arg: Arg;
 
-    constructor(phase: ExecutionPhase) {
+    constructor(phase: ExecutionPhase = ExecutionPhase.Initialization, arg: Arg = instantiate<Arg>(0)) {
         this._phase = phase;
+        this._arg = arg;
     }
 
     toU8a(): u8[] {
+        if(this._phase == ExecutionPhase.ApplyExtrinsic) {
+            return [<u8>this._phase].concat(this._arg.toU8a());
+        }
         return [<u8>this._phase];
     }
 
     populateFromBytes(bytes: u8[], index: i32 = 0): void {
-        switch(bytes[0]) {
+        switch(bytes[index]) {
             case ExecutionPhase.ApplyExtrinsic: 
                 this._phase = ExecutionPhase.ApplyExtrinsic;
+                this._arg = BytesReader.decodeInto<Arg>(bytes.slice(index + 1));
             case ExecutionPhase.Finalization:
                 this._phase = ExecutionPhase.Finalization;
             case ExecutionPhase.Initialization:
@@ -43,14 +49,17 @@ export class Phase implements Codec {
     }
 
     encodedLength(): i32 {
+        if(this._phase == ExecutionPhase.ApplyExtrinsic) {
+            return 1 + this._arg.encodedLength();
+        }
         return 1;
     }
 
-    eq(other: Phase): bool {
+    eq(other: Phase<Arg>): bool {
         return this._phase == other._phase;
     } 
 
-    notEq(other: Phase): bool {
+    notEq(other: Phase<Arg>): bool {
         return !this.eq(other);
     }
 }

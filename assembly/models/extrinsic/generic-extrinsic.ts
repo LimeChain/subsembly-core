@@ -157,9 +157,6 @@ export class GenericExtrinsic<Address extends Codec, B extends Codec, N extends 
      * @returns TransactionValidity instance
      */
     validateUnsigned(auth: Address, nonce: N): ValidTransaction<Address, N> {
-        /**
-         * Return default ValidTransaction instance
-         */
         const priority: UInt64 = new UInt64(this.method.encodedLength());
         const requires: TransactionTag<Address, N>[] = [];
         const provides: TransactionTag<Address, N>[] = [new TransactionTag<Address, N>(auth, nonce)];
