@@ -124,10 +124,10 @@ as-bignum@^0.2.6:
   resolved "https://registry.yarnpkg.com/as-bignum/-/as-bignum-0.2.6.tgz#2462357874395e940eebe9a05f8eaef9d5cb88f3"
   integrity sha512-3FNvNp23mmfkhxDJekO8hcjC49jKkvCD1MKYjr/wk7tTiCgdpM+oSfzeFk+Ce8iZtIKXGWARbDjcs4XGmtnyAA==
 
-as-scale-codec@^0.2.2:
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/as-scale-codec/-/as-scale-codec-0.2.2.tgz#82d8bcfbb2c910811a2309bf4325e38609b21f6b"
-  integrity sha512-IbzNSupYNGbvbQf2+pCkzcNHYCbPfKRSipRuumdJ7PONk6MbaK60KXoDYV5cgAJ3y094Iz+qva6IRVdATd/FWw==
+as-scale-codec@^0.2.3:
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/as-scale-codec/-/as-scale-codec-0.2.3.tgz#e3345ab69502701bee3bd07b8a0b65a8b0ca1b5c"
+  integrity sha512-DQGgkiwvz7xH8ZRyARTlx/3d6KDH8/wEV7YeQ9n5/9m2H8MLfqJjs7Zcfk/piiv3tpULuZOnvKEWq/Snhsc9FA==
   dependencies:
     "@as-pect/assembly" "^4.0.0"
     "@as-pect/cli" "^4.0.0"

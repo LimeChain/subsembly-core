@@ -1,6 +1,6 @@
 {
   "name": "subsembly-core",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Framework for building AssemblyScript Substrate Runtimes",
   "main": "./assembly/index.ts",
   "scripts": {
@@ -23,6 +23,6 @@
   },
   "dependencies": {
     "@assemblyscript/loader": "^0.17.9",
-    "as-scale-codec": "^0.2.2"
+    "as-scale-codec": "^0.2.3"
   }
 }
