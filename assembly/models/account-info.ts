@@ -1,4 +1,4 @@
-import { BytesReader, Codec, CompactInt, UInt32 } from "as-scale-codec";
+import { BytesReader, Codec, CompactInt } from "as-scale-codec";
 
 export class AccountInfo<Nonce extends Codec, Data extends Codec> implements Codec{
     private _nonce: Nonce;
@@ -7,9 +7,9 @@ export class AccountInfo<Nonce extends Codec, Data extends Codec> implements Cod
         return this._nonce;
     }
     
-    private _refCount: UInt32;
+    private _refCount: CompactInt;
     
-    public get refCount(): UInt32 {
+    public get refCount(): CompactInt {
         return this._refCount;
     }
 
@@ -21,7 +21,7 @@ export class AccountInfo<Nonce extends Codec, Data extends Codec> implements Cod
 
     constructor(
         nonce: Nonce = instantiate<Nonce>(), 
-        refCount: UInt32 = instantiate<UInt32>(),
+        refCount: CompactInt = instantiate<CompactInt>(),
         data: Data = instantiate<Data>()
         ) {
         this._nonce = nonce;
@@ -38,7 +38,7 @@ export class AccountInfo<Nonce extends Codec, Data extends Codec> implements Cod
     
     toU8a(): u8[] {
         return this._nonce.toU8a()
-            .concat(new CompactInt(<i64>this._refCount.unwrap()).toU8a())
+            .concat(this._refCount.toU8a())
             .concat(this._data.toU8a());
     }
 
@@ -49,8 +49,7 @@ export class AccountInfo<Nonce extends Codec, Data extends Codec> implements Cod
     populateFromBytes(bytes: u8[], index: i32 = 0): void {
         const bytesReader = new BytesReader(bytes.slice(index));
         this._nonce = bytesReader.readInto<Nonce>();
-        const value = bytesReader.readInto<CompactInt>();
-        this._refCount = new UInt32(<u32>value.unwrap());
+        this._refCount = bytesReader.readInto<CompactInt>();
         this._data = bytesReader.readInto<Data>();
     }
 
