@@ -1,4 +1,4 @@
-import { BytesReader, Codec, UInt32 } from "as-scale-codec";
+import { BytesReader, Codec, CompactInt, UInt32 } from "as-scale-codec";
 
 export class AccountInfo<Nonce extends Codec, Data extends Codec> implements Codec{
     private _nonce: Nonce;
@@ -38,7 +38,7 @@ export class AccountInfo<Nonce extends Codec, Data extends Codec> implements Cod
     
     toU8a(): u8[] {
         return this._nonce.toU8a()
-            .concat(this._refCount.toU8a())
+            .concat(new CompactInt(<i64>this._refCount.unwrap()).toU8a())
             .concat(this._data.toU8a());
     }
 
@@ -49,7 +49,8 @@ export class AccountInfo<Nonce extends Codec, Data extends Codec> implements Cod
     populateFromBytes(bytes: u8[], index: i32 = 0): void {
         const bytesReader = new BytesReader(bytes.slice(index));
         this._nonce = bytesReader.readInto<Nonce>();
-        this._refCount = bytesReader.readInto<UInt32>();
+        const value = bytesReader.readInto<CompactInt>();
+        this._refCount = new UInt32(<u32>value.unwrap());
         this._data = bytesReader.readInto<Data>();
     }
 

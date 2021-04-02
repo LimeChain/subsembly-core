@@ -43,7 +43,5 @@ describe("Generic extrinsic tests", () => {
         expect<bool>(unsigned1.eq(mockExt3.instance)).toStrictEqual(true);
         expect<bool>(unsigned1.isSigned()).toStrictEqual(false);
     })
-
-    
 })
 

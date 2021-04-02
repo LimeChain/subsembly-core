@@ -46,7 +46,7 @@ export class SignedExtension implements Codec {
      * @returns u8a 
      */
     toU8a(): u8[] {
-        return this.era.toU8a().concat(this.tip.toU8a()).concat(this.nonce.toU8a());
+        return this.era.toU8a().concat(this.nonce.toU8a()).concat(this.tip.toU8a());
     }
 
     /**
@@ -64,8 +64,8 @@ export class SignedExtension implements Codec {
     populateFromBytes(bytes: u8[], index: i32 = 0): void {
         const bytesReader = new BytesReader(bytes.slice(index));
         this._era = bytesReader.readInto<ExtrinsicEra>();
-        this._tip = bytesReader.readInto<CompactInt>();
         this._nonce = bytesReader.readInto<CompactInt>();
+        this._tip = bytesReader.readInto<CompactInt>();
     }
 
     /**

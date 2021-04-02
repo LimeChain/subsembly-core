@@ -143,6 +143,7 @@ export class ExtrinsicEra implements Codec {
                 <u64>(first[0]) + 
                 ((<u64>(bytesReader.readBytes(1)[0]) << 8));
             let period: u64 = 2 << (encoded % <u64>(1 << 4));
+            
             let quantizeFactor: u64 = <u64>Math.max((period >> 12) as f64, 1 as f64);
             let phase: u64 = (encoded >> 4) * quantizeFactor;
             if (period >= 4 && phase < period) {
@@ -151,9 +152,8 @@ export class ExtrinsicEra implements Codec {
                 this._phase = phase;
             }
             else {
-                throw new Error();
+                throw new Error("Error in decoding ExtrinsicEra");
             }
-            return;
         }
     }
 }

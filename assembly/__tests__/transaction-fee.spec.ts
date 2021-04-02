@@ -1,8 +1,9 @@
-import { UInt64 } from 'as-scale-codec';
+import { u128 } from 'as-bignum';
+import { UInt128, UInt64 } from 'as-scale-codec';
 import { WeightToFeeCoefficient, WeightToFeePolynomial } from '../models';
 
 export type Weight = UInt64;
-export type Balance = UInt64;
+export type Balance = UInt128;
 
 describe("Weight to fee testing", () => {
     it("Polynomial works", () => {
@@ -13,7 +14,8 @@ describe("Weight to fee testing", () => {
             new WeightToFeeCoefficient(5, 0.75, false, 0)
         ];
         const poly = new WeightToFeePolynomial<Balance>(coeffs);
-        expect<Balance>(poly.calc<Weight>(instantiate<Weight>(1))).toStrictEqual(instantiate<Balance>(10));
+        const fee = poly.calc<Weight>(instantiate<Weight>(1));
+        expect<Balance>(fee).toStrictEqual(instantiate<Balance>(u128.fromU32(10)));
         
         const coeffs1: WeightToFeeCoefficient[] = [
             new WeightToFeeCoefficient(3, 0.11, false, 3),
@@ -22,7 +24,8 @@ describe("Weight to fee testing", () => {
             new WeightToFeeCoefficient(4, 0.3, true, 0)
         ];
         const poly1 = new WeightToFeePolynomial<Balance>(coeffs1);
-        expect<Balance>(poly1.calc<Weight>(instantiate<Weight>(1))).toStrictEqual(instantiate<Balance>(1));
+        const fee1 = poly1.calc<Weight>(instantiate<Weight>(1));
+        expect<Balance>(fee1).toStrictEqual(instantiate<Balance>(u128.One));
     })
 
 })
