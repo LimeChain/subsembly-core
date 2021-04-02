@@ -77,7 +77,7 @@ export class GenericExtrinsic<Address extends Codec, B extends Codec, N extends 
      * @returns u8a 
      */
     toU8a(): u8[] {
-        const EXTRINSIC_VERSION: u8[] = [132];
+        const EXTRINSIC_VERSION: u8[] = [132, 0];
         let encoded: u8[] = this.isSigned() ? EXTRINSIC_VERSION.concat(this.signature.toU8a())
             .concat(this.method.toU8a()) : [GenericExtrinsic.API_VERSION].concat(this.method.toU8a());
         return Utils.encodeCompact(encoded);
@@ -92,8 +92,9 @@ export class GenericExtrinsic<Address extends Codec, B extends Codec, N extends 
         const bytesReader = new BytesReader(bytes.slice(index));
         const _len = bytesReader.readInto<CompactInt>();
         // check whether signing bit is set
-        const signedOrVersion: u8 = bytesReader.readInto<Byte>().unwrap();
-        if(signedOrVersion == GenericExtrinsic.SIGNING_BIT_SET) {
+        const signedOrVersion: Byte = bytesReader.readInto<Byte>();
+        if(signedOrVersion.unwrap() == GenericExtrinsic.SIGNING_BIT_SET) {
+            const _resultByte = bytesReader.readInto<Byte>();
             this._signature = bytesReader.readInto<ExtrinsicSignature<Address, S>>();
             this._method = bytesReader.readInto<Call>();
             return ;

@@ -17,7 +17,6 @@ describe("ExtrinsicSignature", () => {
 
         const extSign1 = MockBuilder.getExtrinsicSignature1();
         const extSignDecoded1 = BytesReader.decodeInto<ExtrinsicSignatureType>(extSign1.bytes);
-        trace("extSignDecoded1: " + extSignDecoded1.toU8a().toString());
         expect<bool>(extSign1.instance.eq(extSignDecoded1)).toStrictEqual(true);
     })
 })

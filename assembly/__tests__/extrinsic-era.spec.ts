@@ -17,7 +17,6 @@ describe("ExtrinsicEra tests", () => {
     it("should decode ExtrinsicEra", () => {
         const mockEra = MockBuilder.getExtrinsicEraInstance3();
         const era = BytesReader.decodeInto<ExtrinsicEra>(mockEra.bytes);
-        trace(era.period.toString() + " " + era.phase.toString());
         expect<bool>(mockEra.instance.eq(era)).toStrictEqual(true);
 
         const mockEra2 = MockBuilder.getExtrinsicEraInstance();

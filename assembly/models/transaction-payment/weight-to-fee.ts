@@ -1,5 +1,5 @@
+import { u128 } from 'as-bignum';
 import { Codec } from "as-scale-codec";
-
 /**
  * One coefficient and its position in the `WeightToFeePolynomial`.
  * One term of polynomial is calculated as:
@@ -46,7 +46,7 @@ export class WeightToFeePolynomial<Balance extends Codec> {
     calc<Weight extends Codec>(weight: Weight): Balance {    
         let acc: u64 = 0;
         for (let i: i32 = 0; i < this.coefficients.length; i++){
-            let w: u64 = <u64>weight.unwrap() ** <u64>this.coefficients[i].degree;
+            let w: u64 = (<u64>weight.unwrap()) ** <u64>this.coefficients[i].degree;
             const frac: u64 = <u64>Math.round(<f64>this.coefficients[i].coeffFrac * <f64>w);
             const integer: u64 = <u64>this.coefficients[i].coeffInteger * <u64>w;
             
@@ -59,6 +59,6 @@ export class WeightToFeePolynomial<Balance extends Codec> {
                 acc += <u64>integer;
             }
         }
-        return instantiate<Balance>(acc);
+        return instantiate<Balance>(u128.fromU64(acc));
     }
 }
