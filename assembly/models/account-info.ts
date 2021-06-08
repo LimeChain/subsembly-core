@@ -1,15 +1,15 @@
 import { BytesReader, Codec, CompactInt } from "as-scale-codec";
 
-export class AccountInfo<Nonce extends Codec, Data extends Codec> implements Codec{
+export class AccountInfo<Nonce extends Codec, RefCount extends Codec, Data extends Codec> implements Codec{
     private _nonce: Nonce;
     
     public get nonce(): Nonce {
         return this._nonce;
     }
     
-    private _refCount: CompactInt;
+    private _refCount: RefCount;
     
-    public get refCount(): CompactInt {
+    public get refCount(): RefCount {
         return this._refCount;
     }
 
@@ -21,7 +21,7 @@ export class AccountInfo<Nonce extends Codec, Data extends Codec> implements Cod
 
     constructor(
         nonce: Nonce = instantiate<Nonce>(), 
-        refCount: CompactInt = instantiate<CompactInt>(),
+        refCount: RefCount = instantiate<RefCount>(),
         data: Data = instantiate<Data>()
         ) {
         this._nonce = nonce;
@@ -49,17 +49,17 @@ export class AccountInfo<Nonce extends Codec, Data extends Codec> implements Cod
     populateFromBytes(bytes: u8[], index: i32 = 0): void {
         const bytesReader = new BytesReader(bytes.slice(index));
         this._nonce = bytesReader.readInto<Nonce>();
-        this._refCount = bytesReader.readInto<CompactInt>();
+        this._refCount = bytesReader.readInto<RefCount>();
         this._data = bytesReader.readInto<Data>();
     }
 
-    eq(other: AccountInfo<Nonce, Data>): bool {
+    eq(other: AccountInfo<Nonce, RefCount, Data>): bool {
         return this.nonce.eq(other.nonce)
             && this.refCount.eq(other.refCount)
             && this.data.eq(other.data);
     }
 
-    notEq(other: AccountInfo<Nonce, Data>): bool {
+    notEq(other: AccountInfo<Nonce, RefCount, Data>): bool {
         return !this.eq(other);
     }
 }
