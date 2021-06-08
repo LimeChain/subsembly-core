@@ -15,9 +15,21 @@ export class AccountData<B extends Codec> implements Codec {
      */
     private reserved: B;
 
-    constructor(free: B = instantiate<B>(), reserved: B = instantiate<B>()) {
+    /**
+     * Misc frozen of account data
+     */
+    private miscFrozen: B;
+
+    /**
+     * Fee frozen of account data
+     */
+    private feeFrozen: B;
+
+    constructor(free: B = instantiate<B>(), reserved: B = instantiate<B>(), miscFrozen: B = instantiate<B>(), feeFrozen: B = instantiate<B>()) {
         this.free = free;
         this.reserved = reserved;
+        this.miscFrozen = miscFrozen;
+        this.feeFrozen = feeFrozen;
     }
 
     /**
@@ -25,7 +37,9 @@ export class AccountData<B extends Codec> implements Codec {
     */
     toU8a(): u8[] {
         return this.free.toU8a()
-            .concat(this.reserved.toU8a());
+            .concat(this.reserved.toU8a())
+            .concat(this.miscFrozen.toU8a())
+            .concat(this.feeFrozen.toU8a());
     }
 
     /**
@@ -45,6 +59,21 @@ export class AccountData<B extends Codec> implements Codec {
     }
 
     /**
+     * @description Sets new miscFrozen value
+     * @param newMiscFrozen 
+     */
+    setMiscFrozen(newMiscFrozen: B): void {
+        this.miscFrozen = newMiscFrozen;
+    }
+
+    /**
+     * @description Sets new fee frozen
+     * @param newFeeFrozen 
+     */
+    setFeeFrozen(newFeeFrozen: B): void {
+        this.feeFrozen = newFeeFrozen;
+    }
+    /**
      * @description Returns the free value
      */
     getFree(): B {
@@ -57,6 +86,18 @@ export class AccountData<B extends Codec> implements Codec {
     getReserved(): B {
         return this.reserved;
     }
+    /**
+     * @description Returns the reserved value
+     */
+    getMiscFrozen(): B {
+        return this.miscFrozen;
+    }
+            /**
+     * @description Returns the reserved value
+     */
+    getFeeFrozen(): B {
+        return this.feeFrozen;
+    }
 
     /**
      * @description Non static constructor from bytes
@@ -67,13 +108,15 @@ export class AccountData<B extends Codec> implements Codec {
         const bytesReader = new BytesReader(bytes.slice(index));
         this.setFree(bytesReader.readInto<B>());
         this.setReserved(bytesReader.readInto<B>());
+        this.setMiscFrozen(bytesReader.readInto<B>());
+        this.setFeeFrozen(bytesReader.readInto<B>());
     }
 
     /**
      * @description Returns encoded byte length
      */
     encodedLength(): i32 {
-        return this.free.encodedLength() + this.reserved.encodedLength();
+        return this.free.encodedLength() + this.reserved.encodedLength() + this.miscFrozen.encodedLength() + this.feeFrozen.encodedLength();
     }
 
     /**
@@ -82,8 +125,12 @@ export class AccountData<B extends Codec> implements Codec {
      * @param b 
      */
     eq(other: AccountData<B>): bool {
-        return this.free == other.free && this.reserved == other.reserved;
+        return this.free == other.free 
+            && this.reserved == other.reserved
+            && this.miscFrozen == other.miscFrozen
+            && this.feeFrozen == other.feeFrozen;
     }
+
     /**
      * @description Overloaded != operator
      * @param a 
@@ -103,8 +150,9 @@ export class AccountData<B extends Codec> implements Codec {
 
         const free = bytesReader.readInto<B>();
         const reserved = bytesReader.readInto<B>();
-
-        const result = new AccountData(free, reserved);
+        const miscFrozen = bytesReader.readInto<B>();
+        const feeFrozen = bytesReader.readInto<B>()
+        const result = new AccountData(free, reserved, miscFrozen, feeFrozen);
         return new DecodedData<AccountData<B>>(result, bytesReader.getLeftoverBytes());
     }
 }
